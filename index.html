@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMD GPU Glossary - Comprehensive Reference Guide</title>
+    <meta name="description" content="A comprehensive reference guide for AMD GPU computing, covering hardware architecture, software stack, and performance optimization concepts.">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">AMD GPU Glossary</h1>
+                <p class="subtitle">Comprehensive reference for AMD GPU computing</p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-container">
+                <input
+                    type="text"
+                    id="searchInput"
+                    class="search-input"
+                    placeholder="Search terms, definitions, or categories..."
+                    autocomplete="off"
+                >
+                <div class="search-icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab active" data-category="all">All Terms</button>
+            <button class="tab" data-category="device-hardware">Device Hardware</button>
+            <button class="tab" data-category="device-software">Device Software</button>
+            <button class="tab" data-category="host-software">Host Software</button>
+            <button class="tab" data-category="performance">Performance</button>
+            <button class="tab" data-category="gpu-specs">GPU Specs</button>
+        </nav>
+
+        <!-- Filter Info -->
+        <div class="filter-info" id="filterInfo" style="display: none;">
+            <span id="filterText"></span>
+            <button class="clear-filter" id="clearFilter">Clear</button>
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Glossary Terms -->
+            <div id="glossaryContent" class="glossary-grid">
+                <div class="loading">Loading glossary terms...</div>
+            </div>
+
+            <!-- GPU Specs Table -->
+            <div id="gpuSpecsContent" class="gpu-specs-section" style="display: none;">
+                <div class="loading">Loading GPU specifications...</div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>
+                    <strong>AMD GPU Glossary</strong> -
+                    Focus on AMD Instinct series (MI300X, MI250X, MI210, MI100)
+                </p>
+                <p class="footer-links">
+                    <a href="https://www.amd.com/en/products/accelerators/instinct.html" target="_blank">AMD Instinct</a>
+                    <span class="separator">•</span>
+                    <a href="https://rocm.docs.amd.com/" target="_blank">ROCm Documentation</a>
+                    <span class="separator">•</span>
+                    <a href="https://github.com/yourusername/amd-gpu-glossary" target="_blank">GitHub</a>
+                </p>
+                <p class="footer-license">
+                    Documentation: CC BY 4.0 | Code: MIT License
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Term Modal -->
+    <div id="termModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

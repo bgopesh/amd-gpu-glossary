@@ -46,6 +46,33 @@ The computational performance of the GPU, typically measured in FLOPS (Floating 
 
 A visual performance model that shows the achievable performance as a function of arithmetic intensity.
 
+```
+Performance (TFLOPS)
+     ▲
+     │                   ┌─────────────────────
+Peak │                  ╱  Compute Bound
+FLOPS│                 ╱   (163.4 TFLOPS for MI300X FP64)
+     │                ╱
+     │               ╱
+     │              ╱
+     │             ╱  Memory Bound
+     │            ╱   (Slope = Memory Bandwidth)
+     │           ╱
+     │          ╱
+     │         ╱
+     │        ╱
+     │       ╱
+     │      ╱
+     │─────┴──────────────────────────────────────►
+     0                                   Arithmetic Intensity
+                                         (FLOPS/Byte)
+
+     Ridge Point = Peak FLOPS / Memory Bandwidth
+
+     If AI < Ridge: Memory Bound → Optimize memory access
+     If AI > Ridge: Compute Bound → Optimize ALU usage
+```
+
 **Key concepts:**
 - **Arithmetic Intensity**: FLOPS per byte of memory traffic
 - **Compute Bound**: Limited by ALU throughput (flat part of roofline)
@@ -67,8 +94,30 @@ Achievable FLOPS = min(Peak FLOPS, Bandwidth × Arithmetic Intensity)
 
 The ratio of active wavefronts to the maximum supported wavefronts per Compute Unit.
 
-**Formula:**
 ```
+Compute Unit Occupancy Example
+┌─────────────────────────────────────────────────┐
+│  Max: 40 wavefronts per CU (CDNA 3)             │
+├─────────────────────────────────────────────────┤
+│                                                  │
+│  Low Occupancy (25%): 10 wavefronts active      │
+│  ┌──┐ ┌──┐ ┌──┐ ┌──┐ ┌──┐                      │
+│  │W0│ │W1│ │W2│ │W3│ │W4│  ... (10 total)      │
+│  └──┘ └──┘ └──┘ └──┘ └──┘                      │
+│  [  Idle  ][  Idle  ][  Idle  ]  ← Wasted!     │
+│                                                  │
+│  High Occupancy (100%): 40 wavefronts active    │
+│  ┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐┌──┐             │
+│  │W0││W1││W2││W3││W4││W5││W6││W7│ ...          │
+│  └──┘└──┘└──┘└──┘└──┘└──┘└──┘└──┘             │
+│  ... (40 wavefronts total - fully utilized)     │
+│                                                  │
+│  Benefits of High Occupancy:                    │
+│  • Hides memory latency                         │
+│  • Better resource utilization                  │
+│  • More wavefronts to schedule                  │
+└─────────────────────────────────────────────────┘
+
 Occupancy = Active Wavefronts / Max Wavefronts per CU
 ```
 
@@ -141,6 +190,36 @@ rocprofv3 --pmc --counter SQ_WAVE_CYCLES,SQ_BUSY_CYCLES -- ./myapp
 ## Memory Coalescing
 
 Combining multiple memory accesses from a wavefront into fewer transactions.
+
+```
+Coalesced vs Uncoalesced Memory Access
+
+COALESCED (Good - Sequential):
+Wavefront (64 threads):
+T0  T1  T2  T3  T4  T5  ... T62 T63
+│   │   │   │   │   │       │   │
+▼   ▼   ▼   ▼   ▼   ▼       ▼   ▼
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 2 │ 3 │ 4 │ 5 │...│62 │63 │  Memory
+└───┴───┴───┴───┴───┴───┴───┴───┴───┘
+└──────────────────────────────────┘
+    1-2 Memory Transactions ✓
+
+
+UNCOALESCED (Bad - Random/Strided):
+Wavefront (64 threads):
+T0    T1    T2    T3    T4   ... T63
+│     │     │     │     │        │
+▼     ▼     ▼     ▼     ▼        ▼
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│   │ 0 │   │ 1 │   │ 2 │   │63 │   │  Memory
+└───┴───┴───┴───┴───┴───┴───┴───┴───┘
+  ▲     ▲     ▲     ▲     ▲      ▲
+  │     │     │     │     │      │
+  Separate Transactions (up to 64) ✗
+
+Result: 10-30x bandwidth reduction!
+```
 
 **Best practices:**
 ```cpp
