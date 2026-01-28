@@ -61,7 +61,7 @@ Achievable FLOPS = min(Peak FLOPS, Bandwidth × Arithmetic Intensity)
 - Guide optimization strategy
 - Understand if kernel is compute or memory bound
 
-**Related:** [Memory Bandwidth](#memory-bandwidth), [Compute Throughput](#compute-throughput), [Omniperf](#omniperf)
+**Related:** [Memory Bandwidth](#memory-bandwidth), [Compute Throughput](#compute-throughput), [rocprofiler-compute](#rocprofiler-compute-omniperf)
 
 ## Occupancy
 
@@ -441,21 +441,20 @@ Hardware metrics exposed by AMD GPUs for detailed performance analysis.
 - Stalls and bottlenecks
 
 **Access via:**
-- rocProfiler command-line tool
-- Omniperf for high-level analysis
-- rocProfiler API for programmatic access
+- [rocprofiler-sdk](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-sdk) - Command-line tool and API
+- [rocprofiler-compute](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-compute) - High-level analysis (formerly Omniperf)
+- rocprofiler-sdk API for programmatic access
 
-**Related:** [rocProfiler](#rocprofiler), [Omniperf](#omniperf)
+**Related:** [rocprofiler-sdk](#rocprofiler-sdk), [rocprofiler-compute](#rocprofiler-compute-omniperf)
 
 ## Profiling and Analysis
 
 The process of measuring and understanding GPU application performance.
 
 **Tools:**
-1. **rocprof**: Low-level profiling, hardware counters
-2. **Omniperf**: High-level analysis with UI
-3. **ROCm-profiler**: Visual profiling
-4. **Manual timing**: Using HIP events
+1. **[rocprofiler-sdk](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-sdk)**: Low-level profiling, hardware counters, API tracing
+2. **[rocprofiler-compute](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-compute)**: High-level analysis with web UI (formerly Omniperf)
+3. **Manual timing**: Using HIP events
 
 **Methodology:**
 1. Identify hotspots (most time-consuming kernels)
@@ -464,7 +463,7 @@ The process of measuring and understanding GPU application performance.
 4. Optimize critical kernels
 5. Measure improvement
 
-**Related:** [rocProfiler](#rocprofiler), [Omniperf](#omniperf)
+**Related:** [rocprofiler-sdk](#rocprofiler-sdk), [rocprofiler-compute](#rocprofiler-compute-omniperf)
 
 ## Performance Optimization Strategies
 

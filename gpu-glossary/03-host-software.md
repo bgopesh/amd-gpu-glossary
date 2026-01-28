@@ -196,9 +196,9 @@ docker pull rocm/tensorflow:latest
 
 **Related:** [ROCm](#rocm-radeon-open-compute-platform), [MIOpen](#miopen)
 
-## rocProfiler
+## rocprofiler-sdk
 
-Low-level profiling tool for AMD GPUs providing detailed performance metrics.
+Low-level profiling tool for AMD GPUs providing detailed performance metrics. Successor to rocProfiler.
 
 **Key features:**
 - Hardware performance counters
@@ -206,6 +206,8 @@ Low-level profiling tool for AMD GPUs providing detailed performance metrics.
 - Memory bandwidth utilization
 - Wavefront occupancy
 - API trace (HIP, HSA)
+- Programmatic profiling API
+- Kernel dispatch correlation
 
 **Usage:**
 ```bash
@@ -215,18 +217,19 @@ rocprof --hsa-trace ./myprogram
 
 **Repository:** [rocprofiler-sdk](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-sdk)
 
-**Related:** [Omniperf](#omniperf), [Performance Analysis](#performance-analysis)
+**Related:** [rocprofiler-compute](#rocprofiler-compute-omniperf), [Performance Analysis](#performance-analysis)
 
-## Omniperf
+## rocprofiler-compute (Omniperf)
 
-High-level performance analysis tool for AMD Instinct GPUs.
+High-level performance analysis tool for AMD Instinct GPUs. Previously known as Omniperf, now part of rocprofiler-compute.
 
 **Key features:**
 - Web-based UI for analysis
 - Detailed metrics and recommendations
 - Roofline analysis
 - Memory hierarchy analysis
-- Built on top of rocProfiler
+- Workload characterization
+- Built on top of rocprofiler-sdk
 
 **Workflow:**
 ```bash
@@ -235,11 +238,14 @@ omniperf profile -n myapp -- ./myprogram
 
 # Analyze results
 omniperf analyze -p workloads/myapp
+
+# Launch web interface
+omniperf analyze -p workloads/myapp --gui
 ```
 
 **Repository:** [rocprofiler-compute](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-compute)
 
-**Related:** [rocProfiler](#rocprofiler), [Roofline Model](#roofline-model)
+**Related:** [rocprofiler-sdk](#rocprofiler-sdk), [Roofline Model](#roofline-model)
 
 ## ROCm Debugger (ROCgdb)
 

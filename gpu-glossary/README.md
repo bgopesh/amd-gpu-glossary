@@ -26,7 +26,7 @@ Programming models and execution concepts:
 Development tools, APIs, and libraries:
 - ROCm platform and runtime
 - Math libraries (rocBLAS, rocFFT, MIOpen)
-- Profiling tools (rocProfiler, Omniperf)
+- Profiling tools (rocprofiler-sdk, rocprofiler-compute)
 - Deep learning frameworks (PyTorch, TensorFlow)
 - Development tools (hipcc, rocm-smi, ROCgdb)
 
