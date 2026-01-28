@@ -125,10 +125,10 @@ The number of active wavefronts scheduled on a Compute Unit at any given time.
 **Measurement:**
 ```bash
 # Using rocprofv3 with PMC counter collection
-rocprofv3 --pmc --counter GRBM_GUI_ACTIVE,SQ_WAVES ./myapp
+rocprofv3 --pmc --counter GRBM_GUI_ACTIVE,SQ_WAVES -- ./myapp
 
 # Or collect occupancy-related counters
-rocprofv3 --pmc --counter SQ_WAVE_CYCLES,SQ_BUSY_CYCLES ./myapp
+rocprofv3 --pmc --counter SQ_WAVE_CYCLES,SQ_BUSY_CYCLES -- ./myapp
 ```
 
 **Impact on performance:**

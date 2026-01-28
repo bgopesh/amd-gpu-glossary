@@ -212,14 +212,14 @@ Low-level profiling tool for AMD GPUs providing detailed performance metrics. Su
 **Usage:**
 ```bash
 # Collect hardware performance counters
-rocprofv3 --pmc --counter SQ_WAVES,SQ_WAVE_CYCLES ./myprogram
+rocprofv3 --pmc --counter SQ_WAVES,SQ_WAVE_CYCLES  -- ./myprogram
 
 # API tracing
-rocprofv3 --hip-trace ./myprogram
-rocprofv3 --hsa-trace ./myprogram
+rocprofv3 --hip-trace -- ./myprogram
+rocprofv3 --hsa-trace -- ./myprogram
 
 # Kernel statistics
-rocprofv3 --stats ./myprogram
+rocprofv3 --stats -- ./myprogram
 ```
 
 **Repository:** [rocprofiler-sdk](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-sdk)
