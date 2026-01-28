@@ -213,6 +213,8 @@ rocprof --stats ./myprogram
 rocprof --hsa-trace ./myprogram
 ```
 
+**Repository:** [rocprofiler-sdk](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-sdk)
+
 **Related:** [Omniperf](#omniperf), [Performance Analysis](#performance-analysis)
 
 ## Omniperf
@@ -234,6 +236,8 @@ omniperf profile -n myapp -- ./myprogram
 # Analyze results
 omniperf analyze -p workloads/myapp
 ```
+
+**Repository:** [rocprofiler-compute](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-compute)
 
 **Related:** [rocProfiler](#rocprofiler), [Roofline Model](#roofline-model)
 
