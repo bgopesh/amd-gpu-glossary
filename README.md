@@ -15,9 +15,87 @@ This glossary provides detailed explanations of AMD GPU terminology and concepts
 
 This glossary focuses on AMD's datacenter and compute GPUs, particularly the AMD Instinct series (MI300X, MI250X, MI210, MI100, etc.), which are optimized for AI, machine learning, and HPC workloads.
 
+## Web Interface
+
+The glossary includes a self-hosted web interface for easy browsing and searching.
+
+### Prerequisites
+
+- Node.js (version 14 or higher)
+- npm (comes with Node.js)
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/amd-gpu-glossary.git
+cd amd-gpu-glossary
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+### Running the Server
+
+Start the web server:
+```bash
+npm start
+```
+
+The glossary will be available at **http://localhost:3000**
+
+### Features
+
+- **Split-pane layout**: Navigate sections on the left, view content on the right
+- **Full-text search**: Quickly find terms across all sections
+- **Multiple themes**: Choose from 5 color schemes for optimal readability
+  - AMD Red (Dark) - Default AMD branding
+  - Light Mode - Bright background for daylight use
+  - High Contrast - Maximum accessibility
+  - Blue (Dark) - Blue accent theme
+  - Green (Dark) - Green accent theme
+- **Cross-references**: Click related terms to navigate between concepts
+- **GPU specifications**: View detailed specs for all AMD Instinct GPUs
+- **ASCII diagrams**: Visual representations of architecture and concepts
+
+### API Endpoints
+
+The server exposes a RESTful API:
+
+- `GET /api/sections` - List all sections with terms
+- `GET /api/terms/:slug` - Get a specific term by slug
+- `GET /api/terms/:sectionId/:slug` - Get a term by section and slug
+- `GET /api/search?q=query` - Search for terms
+- `GET /api/specs` - Get GPU specifications
+
 ## Structure
 
 The glossary content is organized to help developers understand AMD GPU computing at different levels of the stack, from low-level hardware details to high-level performance optimization strategies.
+
+### Project Structure
+
+```
+amd-gpu-glossary/
+├── gpu-glossary/              # Markdown content files
+│   ├── 01-device-hardware.md
+│   ├── 02-device-software.md
+│   ├── 03-host-software.md
+│   ├── 04-performance.md
+│   └── amd-gpu-specs.json
+├── server/                    # Web server
+│   ├── server.js             # Express app
+│   ├── routes/
+│   │   └── api.js           # API endpoints
+│   ├── utils/
+│   │   └── glossary-loader.js
+│   └── public/              # Frontend assets
+│       ├── index.html
+│       ├── css/style.css
+│       └── js/app.js
+└── package.json
+```
 
 ## Licensing
 
