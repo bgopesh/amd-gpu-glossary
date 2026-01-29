@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMD GPU Glossary</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="header-title">AMD GPU Glossary</h1>
+        <p class="header-subtitle">A comprehensive reference guide for AMD GPU computing terminology</p>
+      </div>
+      <div class="header-right">
+        <div class="theme-selector">
+          <label for="theme-select" class="theme-label">Theme:</label>
+          <select id="theme-select" class="theme-select">
+            <option value="amd-red">AMD Red (Dark)</option>
+            <option value="light">Light Mode</option>
+            <option value="high-contrast">High Contrast</option>
+            <option value="blue">Blue (Dark)</option>
+            <option value="green">Green (Dark)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <!-- Search -->
+      <div class="search-container">
+        <input
+          type="text"
+          id="search-input"
+          class="search-input"
+          placeholder="Search terms..."
+          autocomplete="off"
+        >
+        <div id="search-results" class="search-results hidden"></div>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="nav">
+        <div id="nav-sections" class="nav-sections">
+          <!-- Sections will be loaded here by JavaScript -->
+        </div>
+      </nav>
+
+      <!-- GPU Specs Link -->
+      <div class="sidebar-footer">
+        <a href="#specs" class="specs-link">GPU Specifications</a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div id="content-area" class="content-area">
+        <!-- Welcome screen -->
+        <div class="welcome">
+          <h2>Welcome to the AMD GPU Glossary</h2>
+          <p>Select a term from the navigation or use the search to get started.</p>
+
+          <div class="welcome-sections">
+            <div class="welcome-section">
+              <h3>Device Hardware</h3>
+              <p>Physical components and architecture of AMD GPUs</p>
+            </div>
+            <div class="welcome-section">
+              <h3>Device Software</h3>
+              <p>Software running on GPU (kernels, ISA)</p>
+            </div>
+            <div class="welcome-section">
+              <h3>Host Software</h3>
+              <p>CPU-side software and APIs (HIP, ROCm)</p>
+            </div>
+            <div class="welcome-section">
+              <h3>Performance</h3>
+              <p>Optimization and profiling tools</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Loading indicator -->
+  <div id="loading" class="loading hidden">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/app.js"></script>
+</body>
+</html>

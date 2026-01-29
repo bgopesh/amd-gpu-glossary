@@ -6,6 +6,42 @@ Physical components and architecture of AMD GPUs.
 
 The fundamental building block of AMD GPU architecture. A Compute Unit contains SIMD units, vector and scalar ALUs, local data share (LDS) memory, L1 cache, and scheduling hardware. Analogous to NVIDIA's Streaming Multiprocessor (SM).
 
+```
+┌─────────────────────────────────────────────┐
+│         Compute Unit (CU)                   │
+├─────────────────────────────────────────────┤
+│  ┌──────────────┐  ┌──────────────┐        │
+│  │ SIMD Unit 0  │  │ SIMD Unit 1  │        │
+│  │ (64 lanes)   │  │ (64 lanes)   │        │
+│  └──────────────┘  └──────────────┘        │
+│  ┌──────────────┐  ┌──────────────┐        │
+│  │ SIMD Unit 2  │  │ SIMD Unit 3  │        │
+│  └──────────────┘  └──────────────┘        │
+│                                             │
+│  ┌─────────────────────────────────┐       │
+│  │   Matrix Core Engine (CDNA)     │       │
+│  │   FP64/FP32/FP16/BF16/FP8       │       │
+│  └─────────────────────────────────┘       │
+│                                             │
+│  ┌──────────────────────────────────────┐  │
+│  │ Register File (VGPRs + SGPRs)        │  │
+│  │ CDNA 3: 512 KB VGPR + 12.5 KB SGPR   │  │
+│  └──────────────────────────────────────┘  │
+│                                             │
+│  ┌──────────────────────────────────────┐  │
+│  │ LDS (Local Data Share) - 64 KB       │  │
+│  └──────────────────────────────────────┘  │
+│                                             │
+│  ┌──────────────────────────────────────┐  │
+│  │ L1 Cache - 32 KB (CDNA 3)            │  │
+│  └──────────────────────────────────────┘  │
+│                                             │
+│  ┌──────────────────────────────────────┐  │
+│  │ Scheduler & Dispatch Logic           │  │
+│  └──────────────────────────────────────┘  │
+└─────────────────────────────────────────────┘
+```
+
 **Key characteristics:**
 - Executes wavefronts (64 work-items each)
 - Has dedicated LDS (Local Data Share) memory (64 KB)
@@ -79,6 +115,36 @@ Specialized hardware accelerators for matrix multiplication operations, crucial 
 
 The compute chiplet design used in CDNA 3 architecture (MI300 series). Each XCD contains compute units, cache, and command processors.
 
+```
+┌─────────────────────────────────────────────────┐
+│              XCD (Accelerator Complex Die)      │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ │
+│  │ CU 0 │ │ CU 1 │ │ CU 2 │ │ CU 3 │ │ CU 4 │ │
+│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘ │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ │
+│  │ CU 5 │ │ CU 6 │ │ CU 7 │ │ CU 8 │ │ CU 9 │ │
+│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘ │
+│                  ... (38 total CUs)             │
+│  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐ │
+│  │ CU33 │ │ CU34 │ │ CU35 │ │ CU36 │ │ CU37 │ │
+│  └──────┘ └──────┘ └──────┘ └──────┘ └──────┘ │
+│                                                 │
+│  ┌───────────────────────────────────────────┐ │
+│  │      L2 Cache - 4 MB                      │ │
+│  └───────────────────────────────────────────┘ │
+│                                                 │
+│  ┌────────┐ ┌────────┐ ┌────────┐ ┌────────┐  │
+│  │ ACE 0  │ │ ACE 1  │ │ ACE 2  │ │ ACE 3  │  │
+│  │(Async  │ │(Async  │ │(Async  │ │(Async  │  │
+│  │Compute)│ │Compute)│ │Compute)│ │Compute)│  │
+│  └────────┘ └────────┘ └────────┘ └────────┘  │
+│                                                 │
+│         ↕ Infinity Fabric Links ↕              │
+└─────────────────────────────────────────────────┘
+```
+
 **Key characteristics:**
 - Contains 40 Compute Units (38 active, 2 disabled for yield management)
 - 4 MB shared L2 cache per XCD
@@ -119,6 +185,31 @@ AMD's high-bandwidth, low-latency interconnect technology that connects differen
   - All GPUs can communicate directly
 - **MI250X**: Up to 200 GB/s per link between GCDs
 - **On-package**: Connects XCDs to I/O dies and HBM memory
+
+```
+8-GPU MI300X Node - Full Mesh Topology
+(Each GPU has 7 Infinity Fabric links)
+
+        GPU0 ←─────→ GPU1
+        ╱ ╲         ╱ ╲
+       ╱   ╲       ╱   ╲
+      ╱     ╲     ╱     ╲
+   GPU7 ←───→ GPU2
+     ╲       ╱ ╲       ╱
+      ╲     ╱   ╲     ╱
+       ╲   ╱     ╲   ╱
+      GPU6 ←─────→ GPU3
+        ╲         ╱
+         ╲       ╱
+          ╲     ╱
+          GPU5 ←─────→ GPU4
+
+All-to-all connectivity:
+• Any GPU can directly communicate with any other
+• No need for intermediate hops
+• Optimal for collective operations (All-Reduce, etc.)
+• Critical for multi-GPU training performance
+```
 
 **Use cases:**
 - Multi-die GPU coordination
@@ -266,6 +357,41 @@ Specialized vector registers for accumulating results in matrix operations, intr
 
 The multi-level structure of memory in AMD GPUs, from fastest/smallest to slowest/largest:
 
+```
+                    Speed        Size         Scope
+                    ─────────────────────────────────
+┌──────────────┐    Fastest      Smallest     Per-thread
+│  Registers   │    < 1 cycle    512 KB/CU    (VGPRs/SGPRs)
+│  (VGPR/SGPR) │
+└──────┬───────┘
+       │
+┌──────▼───────┐
+│     LDS      │    ~25 cycles   64 KB/CU     Per-workgroup
+│ (Shared Mem) │
+└──────┬───────┘
+       │
+┌──────▼───────┐
+│  L1 Cache    │    ~50 cycles   32 KB/CU     Per-CU
+│              │                 (CDNA 3)
+└──────┬───────┘
+       │
+┌──────▼───────┐
+│  L2 Cache    │    ~150 cycles  4 MB/XCD     Per-XCD
+│              │                 32 MB total
+└──────┬───────┘
+       │
+┌──────▼───────┐
+│  L3 Cache    │    ~200 cycles  256 MB       Entire GPU
+│ (Infinity    │                 (MI300X)
+│  Cache)      │
+└──────┬───────┘
+       │
+┌──────▼───────┐
+│     HBM      │    ~400 cycles  192 GB       Global
+│   (HBM3)     │                 @ 5.3 TB/s
+└──────────────┘    Slowest      Largest      All devices
+```
+
 1. **Registers** (VGPRs/SGPRs) - Sub-nanosecond latency
    - CDNA 3: 512 KB VGPR + 12.5 KB SGPR per CU
    - CDNA 2: 512 KB VGPR + AccVGPR per CU
@@ -295,6 +421,37 @@ The multi-level structure of memory in AMD GPUs, from fastest/smallest to slowes
 ## Chiplet Architecture
 
 Modern AMD GPU design approach using multiple smaller dies (chiplets) connected together instead of one monolithic die.
+
+```
+        MI300X GPU Package (8 XCDs)
+┌─────────────────────────────────────────────┐
+│  ┌───────┐  ┌───────┐  ┌───────┐  ┌───────┐│
+│  │ XCD 0 │  │ XCD 1 │  │ XCD 2 │  │ XCD 3 ││
+│  │38 CUs │  │38 CUs │  │38 CUs │  │38 CUs ││
+│  └───┬───┘  └───┬───┘  └───┬───┘  └───┬───┘│
+│      └──────────┼──────────┼──────────┘    │
+│    ┌────────────┴──────────┴────────────┐  │
+│    │     Infinity Fabric Network        │  │
+│    │         (L3 Cache: 256 MB)         │  │
+│    └────────────┬──────────┬────────────┘  │
+│      ┌──────────┼──────────┼──────────┐    │
+│  ┌───▼───┐  ┌───▼───┐  ┌───▼───┐  ┌───▼───┐│
+│  │ XCD 4 │  │ XCD 5 │  │ XCD 6 │  │ XCD 7 ││
+│  │38 CUs │  │38 CUs │  │38 CUs │  │38 CUs ││
+│  └───┬───┘  └───┬───┘  └───┬───┘  └───┬───┘│
+│      │          │          │          │    │
+│  ┌───▼───┐  ┌───▼───┐  ┌───▼───┐  ┌───▼───┐│
+│  │HBM3   │  │HBM3   │  │HBM3   │  │HBM3   ││
+│  │Stack 0│  │Stack 1│  │Stack 2│  │Stack 3││
+│  └───────┘  └───────┘  └───────┘  └───────┘│
+│  ┌───────┐  ┌───────┐  ┌───────┐  ┌───────┐│
+│  │HBM3   │  │HBM3   │  │HBM3   │  │HBM3   ││
+│  │Stack 4│  │Stack 5│  │Stack 6│  │Stack 7││
+│  └───────┘  └───────┘  └───────┘  └───────┘│
+│                                             │
+│  Total: 304 CUs, 192 GB HBM3, 256 MB L3    │
+└─────────────────────────────────────────────┘
+```
 
 **Benefits:**
 - Better manufacturing yield (smaller dies = fewer defects)

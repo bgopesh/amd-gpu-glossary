@@ -43,6 +43,32 @@ kernel<<<gridDim, blockDim, sharedMem, stream>>>(args);
 
 A group of 64 work-items (threads) that execute in SIMT (Single Instruction, Multiple Thread) fashion on AMD GPUs. Analogous to NVIDIA's "warp" (32 threads).
 
+```
+Wavefront (64 work-items executing in lockstep)
+┌────────────────────────────────────────────────────┐
+│  Lane: 0   1   2   3   4  ...  60  61  62  63     │
+│       ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐   │
+│       │ T │ T │ T │ T │ T │...│ T │ T │ T │ T │   │
+│       └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘   │
+│         ↓   ↓   ↓   ↓   ↓       ↓   ↓   ↓   ↓     │
+│       ┌─────────────────────────────────────────┐  │
+│       │  Same Instruction (e.g., ADD v0, v1)    │  │
+│       └─────────────────────────────────────────┘  │
+│                                                     │
+│  Each lane (T) has its own:                        │
+│    • VGPRs (Vector Registers)                      │
+│    • Program Counter (PC)                          │
+│    • Data values                                   │
+│                                                     │
+│  Shared across wavefront:                          │
+│    • SGPRs (Scalar Registers)                      │
+│    • Instruction stream                            │
+│    • Execution mask (for divergence)               │
+└────────────────────────────────────────────────────┘
+
+AMD Wavefront = 64 threads  (vs. NVIDIA Warp = 32)
+```
+
 **Key characteristics:**
 - Always 64 threads on CDNA/RDNA architectures
 - All threads in wavefront execute same instruction
@@ -67,6 +93,30 @@ A single thread of execution in the AMD programming model. Equivalent to CUDA's 
 
 A collection of work-items that can cooperate via LDS memory and synchronization. Equivalent to CUDA's "thread block."
 
+```
+Workgroup (e.g., 256 threads = 4 wavefronts)
+┌────────────────────────────────────────────────┐
+│         Executing on Single Compute Unit       │
+├────────────────────────────────────────────────┤
+│  Wavefront 0: [T0  T1  T2  ... T62 T63]       │
+│  Wavefront 1: [T64 T65 T66 ... T126 T127]     │
+│  Wavefront 2: [T128 T129 T130 ... T190 T191]  │
+│  Wavefront 3: [T192 T193 T194 ... T254 T255]  │
+│                                                 │
+│  ┌──────────────────────────────────────────┐  │
+│  │  Shared LDS Memory (64 KB)               │  │
+│  │  All threads can read/write              │  │
+│  │  __shared__ float data[256];             │  │
+│  └──────────────────────────────────────────┘  │
+│                                                 │
+│  Synchronization:                               │
+│  __syncthreads() ← All wavefronts wait here    │
+└────────────────────────────────────────────────┘
+
+Workgroup size: typically 64, 128, 256, or 512
+(Must be multiple of 64 for optimal performance)
+```
+
 **Key characteristics:**
 - Execute on the same Compute Unit
 - Share LDS (Local Data Share) memory
@@ -86,6 +136,33 @@ int groupId = blockIdx.x;
 ## Grid
 
 The complete collection of workgroups launched for a kernel execution.
+
+```
+Grid (All workgroups for a kernel launch)
+kernel<<<gridDim, blockDim>>>(args);
+e.g., <<<(1024, 1, 1), (256, 1, 1)>>>
+
+┌─────────────────────────────────────────────────┐
+│  Grid: 1024 workgroups × 256 threads each       │
+│       = 262,144 total threads                   │
+├─────────────────────────────────────────────────┤
+│                                                  │
+│  WG 0    WG 1    WG 2    WG 3    ...   WG 1023  │
+│  ┌───┐  ┌───┐  ┌───┐  ┌───┐         ┌───┐     │
+│  │256│  │256│  │256│  │256│   ...   │256│     │
+│  │ T │  │ T │  │ T │  │ T │         │ T │     │
+│  └─┬─┘  └─┬─┘  └─┬─┘  └─┬─┘         └─┬─┘     │
+│    │      │      │      │               │       │
+│    ▼      ▼      ▼      ▼               ▼       │
+│  ┌────────────────────────────────────────┐     │
+│  │    Distributed across Compute Units    │     │
+│  │  CU0   CU1   CU2  ... CU303 (MI300X)  │     │
+│  └────────────────────────────────────────┘     │
+│                                                  │
+│  Note: Workgroups execute independently         │
+│        (no synchronization between WGs)         │
+└─────────────────────────────────────────────────┘
+```
 
 **Key characteristics:**
 - Can be 1D, 2D, or 3D
