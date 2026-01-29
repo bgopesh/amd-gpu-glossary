@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMD GPU Profiler Simulation</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/profiler.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="header-left">
+        <h1 class="header-title">AMD GPU Profiler Simulation</h1>
+        <p class="header-subtitle">Interactive tools for understanding GPU performance</p>
+      </div>
+      <div class="header-right">
+        <a href="/" class="back-link">← Back to Glossary</a>
+        <div class="theme-selector">
+          <label for="theme-select" class="theme-label">Theme:</label>
+          <select id="theme-select" class="theme-select">
+            <option value="amd-red">AMD Red (Dark)</option>
+            <option value="light">Light Mode</option>
+            <option value="high-contrast">High Contrast</option>
+            <option value="blue">Blue (Dark)</option>
+            <option value="green">Green (Dark)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="profiler-container">
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-button active" data-tab="roofline">Roofline Model</button>
+      <button class="tab-button" data-tab="occupancy">Occupancy Calculator</button>
+      <button class="tab-button" data-tab="metrics">GPU Metrics</button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Roofline Model -->
+      <div id="roofline-tab" class="tab-pane active">
+        <div class="tool-header">
+          <h2>Roofline Model Visualizer</h2>
+          <p>Visualize GPU performance bounds and analyze kernel efficiency</p>
+        </div>
+
+        <div class="tool-layout">
+          <div class="tool-sidebar">
+            <h3>Example Workloads</h3>
+            <div class="example-list">
+              <button class="example-button" data-example="gemm">GEMM (Matrix Multiply)</button>
+              <button class="example-button" data-example="conv">2D Convolution</button>
+              <button class="example-button" data-example="attention">Attention Mechanism</button>
+              <button class="example-button" data-example="elementwise">Element-wise Operations</button>
+              <button class="example-button" data-example="reduction">Reduction</button>
+            </div>
+
+            <div class="example-details" id="example-details">
+              <h4>Select an example</h4>
+              <p>Choose a workload to see its position on the roofline chart</p>
+            </div>
+          </div>
+
+          <div class="tool-main">
+            <div class="chart-container">
+              <canvas id="roofline-chart"></canvas>
+            </div>
+            <div class="chart-legend">
+              <h4>GPU: AMD MI300X</h4>
+              <div class="legend-items">
+                <div class="legend-item">
+                  <span class="legend-color" style="background: var(--primary-color);"></span>
+                  <span>Peak FP64: 163.4 TFLOPS</span>
+                </div>
+                <div class="legend-item">
+                  <span class="legend-color" style="background: var(--text-secondary);"></span>
+                  <span>Memory Bandwidth: 5.3 TB/s</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Occupancy Calculator -->
+      <div id="occupancy-tab" class="tab-pane">
+        <div class="tool-header">
+          <h2>Occupancy Calculator</h2>
+          <p>Calculate Compute Unit occupancy based on resource usage</p>
+        </div>
+
+        <div class="tool-layout">
+          <div class="tool-sidebar">
+            <h3>Example Scenarios</h3>
+            <div class="example-list">
+              <button class="example-button" data-scenario="optimal">Optimal (100%)</button>
+              <button class="example-button" data-scenario="high-vgpr">High VGPR Usage</button>
+              <button class="example-button" data-scenario="high-lds">High LDS Usage</button>
+              <button class="example-button" data-scenario="large-workgroup">Large Workgroup</button>
+              <button class="example-button" data-scenario="small-workgroup">Small Workgroup</button>
+            </div>
+
+            <div class="scenario-params" id="scenario-params">
+              <h4>Scenario Parameters</h4>
+              <div class="param-grid">
+                <div class="param-item">
+                  <label>Workgroup Size:</label>
+                  <span id="param-workgroup">-</span>
+                </div>
+                <div class="param-item">
+                  <label>VGPRs per thread:</label>
+                  <span id="param-vgpr">-</span>
+                </div>
+                <div class="param-item">
+                  <label>LDS per workgroup:</label>
+                  <span id="param-lds">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tool-main">
+            <div class="occupancy-result">
+              <div class="occupancy-gauge">
+                <canvas id="occupancy-gauge"></canvas>
+                <div class="gauge-value" id="occupancy-value">-</div>
+              </div>
+              <div class="occupancy-details" id="occupancy-details">
+                <h4>Select a scenario</h4>
+              </div>
+            </div>
+
+            <div class="occupancy-explanation">
+              <h4>GPU Limits (CDNA 3)</h4>
+              <ul>
+                <li>Max wavefronts per CU: 40</li>
+                <li>VGPR per CU: 512 KB</li>
+                <li>LDS per CU: 64 KB</li>
+                <li>Wavefront size: 64 threads</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GPU Metrics Dashboard -->
+      <div id="metrics-tab" class="tab-pane">
+        <div class="tool-header">
+          <h2>GPU Metrics Dashboard</h2>
+          <p>Simulated real-time GPU performance metrics</p>
+        </div>
+
+        <div class="tool-layout full-width">
+          <div class="metrics-controls">
+            <h3>Workload Simulation</h3>
+            <div class="control-buttons">
+              <button id="workload-training" class="workload-button">LLM Training</button>
+              <button id="workload-inference" class="workload-button">Inference</button>
+              <button id="workload-idle" class="workload-button">Idle</button>
+              <button id="workload-mixed" class="workload-button">Mixed Workload</button>
+            </div>
+          </div>
+
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <h4>GPU Utilization</h4>
+              <canvas id="chart-utilization" class="metric-chart"></canvas>
+              <div class="metric-value" id="value-utilization">0%</div>
+            </div>
+
+            <div class="metric-card">
+              <h4>Memory Bandwidth</h4>
+              <canvas id="chart-bandwidth" class="metric-chart"></canvas>
+              <div class="metric-value" id="value-bandwidth">0 GB/s</div>
+            </div>
+
+            <div class="metric-card">
+              <h4>Power Consumption</h4>
+              <canvas id="chart-power" class="metric-chart"></canvas>
+              <div class="metric-value" id="value-power">0 W</div>
+            </div>
+
+            <div class="metric-card">
+              <h4>Temperature</h4>
+              <canvas id="chart-temp" class="metric-chart"></canvas>
+              <div class="metric-value" id="value-temp">0°C</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/js/profiler.js"></script>
+</body>
+</html>

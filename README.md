@@ -59,6 +59,10 @@ The glossary will be available at **http://localhost:3000**
 - **Cross-references**: Click related terms to navigate between concepts
 - **GPU specifications**: View detailed specs for all AMD Instinct GPUs
 - **ASCII diagrams**: Visual representations of architecture and concepts
+- **Profiler Simulation**: Interactive tools for understanding GPU performance
+  - **Roofline Model**: Visualize performance bounds and analyze kernel efficiency with realistic workload examples (GEMM, convolution, attention, etc.)
+  - **Occupancy Calculator**: Calculate Compute Unit occupancy based on resource usage with pre-loaded scenarios
+  - **GPU Metrics Dashboard**: Real-time simulation of GPU metrics (utilization, bandwidth, power, temperature) under different workloads
 
 ### API Endpoints
 
