@@ -85,4 +85,20 @@ router.get('/specs', (req, res) => {
   }
 });
 
+// GET /api/overview/:sectionId - Get overview for a section
+router.get('/overview/:sectionId', (req, res) => {
+  try {
+    const overview = glossary.getOverview(req.params.sectionId);
+
+    if (!overview) {
+      return res.status(404).json({ error: 'Overview not found' });
+    }
+
+    res.json(overview);
+  } catch (error) {
+    console.error('Error fetching overview:', error);
+    res.status(500).json({ error: 'Failed to fetch overview' });
+  }
+});
+
 module.exports = router;

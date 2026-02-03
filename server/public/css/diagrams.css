@@ -1,0 +1,659 @@
+/* AMD GPU Glossary - Diagram Styles */
+
+/* Base Diagram Container */
+.diagram-container {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.diagram-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+}
+
+.diagram-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.diagram-title h3 {
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  border: none;
+  padding: 0;
+}
+
+.diagram-subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* MI300X Architecture Diagram */
+.architecture-diagram {
+  background: radial-gradient(circle at top, rgba(237, 28, 36, 0.05), transparent 70%),
+              linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+}
+
+.gpu-package {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.xcd-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.xcd {
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.xcd:hover {
+  border-color: var(--primary-color);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(237, 28, 36, 0.3);
+}
+
+.xcd-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.xcd-title {
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.xcd-cu-count {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.cu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.cu-mini {
+  background: var(--primary-color);
+  height: 12px;
+  border-radius: 2px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.xcd:hover .cu-mini {
+  opacity: 1;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.xcd-cache,
+.xcd-aces {
+  background: rgba(237, 28, 36, 0.1);
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.cache-label,
+.ace-label {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Infinity Fabric Layer */
+.infinity-fabric-layer {
+  background: linear-gradient(135deg, rgba(237, 28, 36, 0.2), rgba(237, 28, 36, 0.05));
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.infinity-fabric-layer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(237, 28, 36, 0.3), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.fabric-label {
+  text-align: center;
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1.2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.fabric-icon {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.cache-info {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* HBM Memory Layer */
+.hbm-layer {
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-secondary));
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.hbm-label {
+  text-align: center;
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.hbm-stacks {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 0.5rem;
+}
+
+.hbm-stack {
+  background: var(--bg-primary);
+  border: 2px solid var(--primary-color);
+  border-radius: 6px;
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.hbm-stack:hover {
+  background: rgba(237, 28, 36, 0.1);
+  transform: translateY(-2px);
+}
+
+.hbm-stack-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.hbm-capacity {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+/* Specs Summary */
+.specs-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.spec-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg-primary);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.spec-item:hover {
+  border-color: var(--primary-color);
+  transform: scale(1.02);
+}
+
+.spec-icon {
+  font-size: 2rem;
+}
+
+.spec-details {
+  flex: 1;
+}
+
+.spec-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.spec-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Compute Unit Diagram */
+.compute-unit-diagram .cu-structure {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.section-label {
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.simd-section {
+  background: var(--bg-primary);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.simd-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.simd-unit {
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+  border: 2px solid var(--primary-color);
+  border-radius: 6px;
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.simd-unit:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(237, 28, 36, 0.3);
+}
+
+.simd-header {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.simd-lanes {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.simd-ops {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+/* Matrix Core Section */
+.matrix-core-section {
+  background: var(--bg-primary);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.matrix-ops {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+}
+
+.matrix-op {
+  background: linear-gradient(135deg, rgba(237, 28, 36, 0.2), rgba(237, 28, 36, 0.05));
+  border: 2px solid var(--primary-color);
+  border-radius: 6px;
+  padding: 1rem;
+  text-align: center;
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.matrix-op:hover {
+  background: rgba(237, 28, 36, 0.3);
+  transform: scale(1.05);
+}
+
+/* Memory Section */
+.memory-section {
+  display: grid;
+  gap: 1rem;
+}
+
+.registers {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.register-block {
+  background: var(--bg-primary);
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.register-block:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(237, 28, 36, 0.2);
+}
+
+.reg-icon,
+.lds-icon,
+.cache-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.reg-label,
+.lds-label,
+.cache-label {
+  color: var(--text-primary);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.reg-size,
+.lds-size,
+.cache-size {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.lds-block,
+.cache-block {
+  background: var(--bg-primary);
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.lds-block:hover,
+.cache-block:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(237, 28, 36, 0.2);
+}
+
+.lds-latency,
+.cache-latency {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* Scheduler Section */
+.scheduler-section {
+  background: var(--bg-primary);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.scheduler-label {
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.scheduler-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.feature {
+  background: rgba(237, 28, 36, 0.1);
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  border: 1px solid var(--primary-color);
+}
+
+/* Memory Hierarchy Diagram */
+.memory-hierarchy-diagram {
+  max-width: 900px;
+  margin: 2rem auto;
+}
+
+.memory-pyramid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.memory-level {
+  background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+  border: 2px solid var(--border-color);
+  border-left: 5px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.memory-level:hover {
+  transform: translateX(10px);
+  border-color: var(--primary-color);
+  box-shadow: 0 4px 16px rgba(237, 28, 36, 0.3);
+}
+
+.level-content {
+  display: grid;
+  grid-template-columns: 50px 1fr auto;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.level-number {
+  width: 50px;
+  height: 50px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.level-name {
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 0.25rem;
+}
+
+.level-size {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.level-latency {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  background: rgba(237, 28, 36, 0.1);
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* Gradient scale for memory levels */
+.level-1 { border-left-color: #00FF00; }
+.level-2 { border-left-color: #7FFF00; }
+.level-3 { border-left-color: #FFFF00; }
+.level-4 { border-left-color: #FFD700; }
+.level-5 { border-left-color: #FFA500; }
+.level-6 { border-left-color: #FF6B6B; }
+.level-7 { border-left-color: #FF0000; }
+
+/* Infinity Fabric Topology Diagram */
+.infinity-fabric-diagram {
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.fabric-topology {
+  width: 100%;
+  height: auto;
+  margin: 2rem 0;
+}
+
+.fabric-link {
+  stroke: var(--primary-color);
+  stroke-width: 2;
+  opacity: 0.2;
+  transition: all 0.3s ease;
+}
+
+.fabric-link:hover {
+  opacity: 0.8;
+  stroke-width: 3;
+}
+
+.gpu-node {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.gpu-node:hover .gpu-circle {
+  fill: rgba(237, 28, 36, 0.2);
+  stroke-width: 4;
+  transform: scale(1.1);
+}
+
+.gpu-node:hover {
+  filter: drop-shadow(0 0 10px var(--primary-color));
+}
+
+.fabric-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--bg-primary);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.feature-icon {
+  font-size: 1.5rem;
+}
+
+.feature-text {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .xcd-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hbm-stacks {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .simd-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .level-content {
+    grid-template-columns: 40px 1fr;
+    gap: 1rem;
+  }
+
+  .level-latency {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .xcd-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hbm-stacks {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .specs-summary {
+    grid-template-columns: 1fr;
+  }
+}

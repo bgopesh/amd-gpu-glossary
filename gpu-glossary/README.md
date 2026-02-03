@@ -6,8 +6,15 @@ This directory contains the comprehensive documentation for AMD GPU computing te
 
 The glossary is organized into four main sections:
 
-### 1. Device Hardware (`01-device-hardware.md`)
-Physical components and architecture of AMD GPUs including:
+### 1. Device Hardware
+**[Hardware Overview](01a-device-hardware-overview.md)** - Complete GPU architecture in one diagram
+- Comprehensive view of all hardware components
+- MI300X full package diagram
+- Memory hierarchy visualization
+- Multi-GPU Infinity Fabric topology
+- Architecture comparison across generations
+
+**[Hardware Details](01-device-hardware.md)** - Detailed component specifications
 - Compute Units and Stream Processors
 - Memory hierarchy (HBM, LDS, Cache)
 - Matrix Core Engines

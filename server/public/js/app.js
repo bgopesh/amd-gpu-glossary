@@ -73,19 +73,33 @@ class GlossaryApp {
   renderNavigation() {
     this.navSections.innerHTML = '';
 
+    // Add Home section
+    const homeSection = document.createElement('div');
+    homeSection.className = 'nav-section home-section';
+    homeSection.innerHTML = `
+      <div class="nav-section-title">
+        <a href="#home" class="nav-section-title-link">🏠 Home</a>
+      </div>
+    `;
+    this.navSections.appendChild(homeSection);
+
     for (const section of this.sections) {
       const sectionEl = document.createElement('div');
       sectionEl.className = 'nav-section';
       sectionEl.dataset.sectionId = section.id;
 
-      // Section title
+      // Section title - make it clickable to show topic list
       const titleEl = document.createElement('div');
       titleEl.className = 'nav-section-title';
       titleEl.innerHTML = `
-        <span>${section.title}</span>
+        <a href="#section/${section.id}" class="nav-section-title-link">${section.title}</a>
         <span class="nav-section-toggle">▼</span>
       `;
-      titleEl.addEventListener('click', () => this.toggleSection(section.id));
+      titleEl.querySelector('.nav-section-toggle').addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.toggleSection(section.id);
+      });
 
       // Section terms
       const termsEl = document.createElement('div');
@@ -149,8 +163,19 @@ class GlossaryApp {
     // Handle clicks on term links in content (for related terms)
     this.contentArea.addEventListener('click', (e) => {
       if (e.target.tagName === 'A' && e.target.hash) {
-        e.preventDefault();
+        // Check if this is an internal anchor link (starts with # and targets an element on the current page)
         const hash = e.target.hash.substring(1);
+        const targetElement = document.getElementById(hash);
+
+        // If the target element exists on the current page, just scroll to it
+        if (targetElement) {
+          e.preventDefault();
+          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+
+        // Otherwise, navigate to the term/page
+        e.preventDefault();
         window.location.hash = hash;
       }
     });
@@ -215,8 +240,8 @@ class GlossaryApp {
   async handleRoute() {
     const hash = window.location.hash.substring(1);
 
-    if (!hash || hash === '') {
-      this.showWelcome();
+    if (!hash || hash === '' || hash === 'home') {
+      this.showHome();
       this.updateActiveNavItem(null);
       return;
     }
@@ -227,37 +252,157 @@ class GlossaryApp {
       return;
     }
 
+    // Check if it's a section view (list of topics)
+    if (hash.startsWith('section/')) {
+      const sectionId = hash.substring(8); // Remove 'section/' prefix
+      this.showSectionTopics(sectionId);
+      this.updateActiveNavItem(null);
+      return;
+    }
+
+    // Check if it's an overview page
+    if (hash.startsWith('overview/')) {
+      const sectionId = hash.substring(9); // Remove 'overview/' prefix
+      await this.showOverview(sectionId);
+      this.updateActiveNavItem(null);
+      return;
+    }
+
     // Load term
     await this.loadTerm(hash);
   }
 
-  // Show welcome screen
-  showWelcome() {
+  // Show home page with AMD animation
+  showHome() {
     this.contentArea.innerHTML = `
       <div class="welcome">
-        <h2>Welcome to the AMD GPU Glossary</h2>
-        <p>Select a term from the navigation or use the search to get started.</p>
+        <div class="welcome-hero">
+          <div class="amd-logo-animation">
+            <svg class="amd-logo" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+              <g class="logo-group">
+                <!-- A -->
+                <path class="logo-letter" d="M20,60 L30,20 L40,20 L50,60 M25,45 L45,45" stroke="var(--primary-color)" stroke-width="3" fill="none"/>
+                <!-- M -->
+                <path class="logo-letter" d="M65,60 L65,20 L75,40 L85,20 L85,60" stroke="var(--primary-color)" stroke-width="3" fill="none"/>
+                <!-- D -->
+                <path class="logo-letter" d="M100,60 L100,20 L110,20 Q120,30 120,40 Q120,50 110,60 L100,60" stroke="var(--primary-color)" stroke-width="3" fill="none"/>
+              </g>
+              <circle class="pulse-circle pulse-1" cx="35" cy="40" r="5" fill="var(--primary-color)" opacity="0.3"/>
+              <circle class="pulse-circle pulse-2" cx="75" cy="30" r="5" fill="var(--primary-color)" opacity="0.3"/>
+              <circle class="pulse-circle pulse-3" cx="110" cy="40" r="5" fill="var(--primary-color)" opacity="0.3"/>
+            </svg>
+          </div>
+          <div class="welcome-hero-content">
+            <h1 class="welcome-title">AMD GPU Glossary</h1>
+            <p class="welcome-subtitle">Your comprehensive reference for AMD Instinct GPU computing</p>
+            <p class="welcome-description">
+              Explore detailed documentation on AMD CDNA architecture, ROCm software stack,
+              HIP programming, and performance optimization for high-performance computing.
+            </p>
+          </div>
+        </div>
+
+        <div class="welcome-stats">
+          <div class="stat-card">
+            <div class="stat-value">304</div>
+            <div class="stat-label">Compute Units (MI300X)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">192 GB</div>
+            <div class="stat-label">HBM3 Memory</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">1.3 PF</div>
+            <div class="stat-label">FP16 Performance</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">5.3 TB/s</div>
+            <div class="stat-label">Memory Bandwidth</div>
+          </div>
+        </div>
 
         <div class="welcome-sections">
-          <div class="welcome-section">
+          <a href="#section/device-hardware" class="welcome-section device-hardware">
+            <div class="section-icon">🔧</div>
             <h3>Device Hardware</h3>
-            <p>Physical components and architecture of AMD GPUs</p>
-          </div>
-          <div class="welcome-section">
+            <p>Physical components and architecture of AMD GPUs including compute units, memory hierarchy, and chiplet design</p>
+            <div class="section-arrow">→</div>
+          </a>
+          <a href="#device-software/kernel" class="welcome-section device-software">
+            <div class="section-icon">⚡</div>
             <h3>Device Software</h3>
-            <p>Software running on GPU (kernels, ISA)</p>
-          </div>
-          <div class="welcome-section">
+            <p>GPU kernels, ISA, wavefronts, and low-level execution model for parallel computing</p>
+            <div class="section-arrow">→</div>
+          </a>
+          <a href="#host-software/hip-heterogeneous-compute-interface-for-portability" class="welcome-section host-software">
+            <div class="section-icon">💻</div>
             <h3>Host Software</h3>
-            <p>CPU-side software and APIs (HIP, ROCm)</p>
-          </div>
-          <div class="welcome-section">
+            <p>HIP programming, ROCm platform, compilers, and CPU-side APIs for GPU development</p>
+            <div class="section-arrow">→</div>
+          </a>
+          <a href="#performance/rocprof-rocm-profiler" class="welcome-section performance">
+            <div class="section-icon">📊</div>
             <h3>Performance</h3>
-            <p>Optimization and profiling tools</p>
-          </div>
+            <p>Profiling tools, optimization techniques, and performance analysis for maximum throughput</p>
+            <div class="section-arrow">→</div>
+          </a>
+        </div>
+
+        <div class="welcome-footer">
+          <p class="footer-note">
+            💡 <strong>Getting Started:</strong> Use the search bar or navigate through sections on the left.
+            Click any section to explore GPU computing topics.
+          </p>
         </div>
       </div>
     `;
+  }
+
+  // Show section topics list
+  showSectionTopics(sectionId) {
+    const section = this.sections.find(s => s.id === sectionId);
+
+    if (!section) {
+      this.showError('Section not found');
+      return;
+    }
+
+    this.contentArea.innerHTML = `
+      <div class="section-topics">
+        <div class="section-topics-header">
+          <div class="section-icon-large">${this.getSectionIcon(sectionId)}</div>
+          <div class="section-header-content">
+            <h1 class="section-topics-title">${this.escapeHtml(section.title)}</h1>
+            <p class="section-topics-description">${this.escapeHtml(section.description)}</p>
+          </div>
+        </div>
+
+        <div class="topics-grid">
+          ${section.terms.map(term => `
+            <a href="#${term.id}" class="topic-card">
+              <div class="topic-card-icon">📄</div>
+              <div class="topic-card-content">
+                <h3 class="topic-card-title">${this.escapeHtml(term.title)}</h3>
+                <div class="topic-card-arrow">→</div>
+              </div>
+            </a>
+          `).join('')}
+        </div>
+      </div>
+    `;
+
+    this.contentArea.parentElement.scrollTop = 0;
+  }
+
+  // Get section icon
+  getSectionIcon(sectionId) {
+    const icons = {
+      'device-hardware': '🔧',
+      'device-software': '⚡',
+      'host-software': '💻',
+      'performance': '📊'
+    };
+    return icons[sectionId] || '📁';
   }
 
   // Load and display a term
@@ -321,6 +466,64 @@ class GlossaryApp {
     `;
 
     this.currentTerm = term;
+
+    // Render diagrams after content is loaded
+    this.renderDiagrams();
+  }
+
+  // Render diagrams in the current content
+  renderDiagrams() {
+    if (typeof DiagramRenderer !== 'undefined') {
+      setTimeout(() => {
+        const renderer = new DiagramRenderer();
+        renderer.renderDiagrams();
+      }, 100);
+    }
+  }
+
+  // Show section overview
+  async showOverview(sectionId) {
+    try {
+      this.showLoading();
+
+      const response = await fetch(`/api/overview/${sectionId}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          this.showError('Overview not found');
+        } else {
+          throw new Error('Failed to load overview');
+        }
+        return;
+      }
+
+      const overview = await response.json();
+      this.renderOverview(overview);
+    } catch (error) {
+      console.error('Error loading overview:', error);
+      this.showError('Failed to load section overview');
+    } finally {
+      this.hideLoading();
+    }
+  }
+
+  // Render section overview
+  renderOverview(overview) {
+    this.contentArea.innerHTML = `
+      <div class="term-content">
+        <div class="term-header">
+          <div class="term-section">Overview</div>
+          <h1 class="term-title">${this.escapeHtml(overview.title)}</h1>
+        </div>
+        <div class="term-body">
+          ${overview.html}
+        </div>
+      </div>
+    `;
+
+    this.contentArea.parentElement.scrollTop = 0;
+
+    // Render diagrams after content is loaded
+    this.renderDiagrams();
   }
 
   // Show GPU specifications

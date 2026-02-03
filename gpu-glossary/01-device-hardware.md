@@ -2,6 +2,149 @@
 
 Physical components and architecture of AMD GPUs.
 
+## Complete AMD GPU Architecture (MI300X)
+
+The AMD Instinct MI300X represents the pinnacle of AMD's CDNA 3 architecture, featuring a revolutionary multi-chiplet design with 8 Accelerator Complex Dies (XCDs) integrated into a single package.
+
+### Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                                    AMD MI300X GPU Package                                            │
+│                                   (CDNA 3 Architecture)                                              │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                       │
+│  ┌───────────────────────┐  ┌───────────────────────┐  ┌───────────────────────┐  ┌───────────────┐│
+│  │   XCD 0 (38 CUs)      │  │   XCD 1 (38 CUs)      │  │   XCD 2 (38 CUs)      │  │  XCD 3 (38 CUs││
+│  ├───────────────────────┤  ├───────────────────────┤  ├───────────────────────┤  ├───────────────┤│
+│  │ ┌─────────────────┐   │  │ ┌─────────────────┐   │  │ ┌─────────────────┐   │  │ ┌─────────────┤│
+│  │ │  Compute Units  │   │  │ │  Compute Units  │   │  │ │  Compute Units  │   │  │ │  Compute Un││
+│  │ │  ┌───┬───┬───┐  │   │  │ │  ┌───┬───┬───┐  │   │  │ │  ┌───┬───┬───┐  │   │  │ │  ┌───┬───┬─││
+│  │ │  │CU0│CU1│CU2│  │   │  │ │  │CU │CU │CU │  │   │  │ │  │CU │CU │CU │  │   │  │ │  │CU │CU │C││
+│  │ │  ├───┼───┼───┤  │   │  │ │  ├───┼───┼───┤  │   │  │ │  ├───┼───┼───┤  │   │  │ │  ├───┼───┼─││
+│  │ │  │CU3│CU4│CU5│  │   │  │ │  │CU │CU │CU │  │   │  │ │  │CU │CU │CU │  │   │  │ │  │CU │CU │C││
+│  │ │  ├───┴───┴───┤  │   │  │ │  ├───┴───┴───┤  │   │  │ │  ├───┴───┴───┤  │   │  │ │  ├───┴───┴─││
+│  │ │  │  ... 38   │  │   │  │ │  │  ... 38   │  │   │  │ │  │  ... 38   │  │   │  │ │  │  ... 38 ││
+│  │ │  │   total   │  │   │  │ │  │   total   │  │   │  │ │  │   total   │  │   │  │ │  │   total ││
+│  │ │  └───────────┘  │   │  │ │  └───────────┘  │   │  │ │  └───────────┘  │   │  │ │  └─────────││
+│  │ │                 │   │  │ │                 │   │  │ │                 │   │  │ │             ││
+│  │ │ Each CU has:    │   │  │ │                 │   │  │ │                 │   │  │ │             ││
+│  │ │ • 4 SIMD Units  │   │  │ │                 │   │  │ │                 │   │  │ │             ││
+│  │ │ • Matrix Cores  │   │  │ │                 │   │  │ │                 │   │  │ │             ││
+│  │ │ • 512KB VGPRs   │   │  │ │                 │   │  │ │                 │   │  │ │             ││
+│  │ │ • 64KB LDS      │   │  │ │                 │   │  │ │                 │   │  │ │             ││
+│  │ │ • 32KB L1 Cache │   │  │ │                 │   │  │ │                 │   │  │ │             ││
+│  │ └─────────────────┘   │  │ └─────────────────┘   │  │ └─────────────────┘   │  │ └─────────────││
+│  │                       │  │                       │  │                       │  │               ││
+│  │  L2 Cache: 4 MB       │  │  L2 Cache: 4 MB       │  │  L2 Cache: 4 MB       │  │  L2 Cache: 4 M││
+│  │                       │  │                       │  │                       │  │               ││
+│  │  ┌──────────────┐     │  │  ┌──────────────┐     │  │  ┌──────────────┐     │  │  ┌──────────┐││
+│  │  │ ACE 0│ACE 1  │     │  │  │ ACE 0│ACE 1  │     │  │  │ ACE 0│ACE 1  │     │  │  │ ACE 0│ACE││
+│  │  │ ACE 2│ACE 3  │     │  │  │ ACE 2│ACE 3  │     │  │  │ ACE 2│ACE 3  │     │  │  │ ACE 2│ACE││
+│  │  └──────────────┘     │  │  └──────────────┘     │  │  └──────────────┘     │  │  └──────────┘││
+│  └───────────┬───────────┘  └───────────┬───────────┘  └───────────┬───────────┘  └───────┬───────││
+│              │                          │                          │                      │       ││
+│              └──────────────────────────┼──────────────────────────┼──────────────────────┘       ││
+│                                         │                          │                              ││
+│  ┌──────────────────────────────────────┴──────────────────────────┴─────────────────────────────┐│
+│  │                         Infinity Fabric Network (L3 Cache: 256 MB)                            ││
+│  │                     High-bandwidth interconnect connecting all XCDs                           ││
+│  │                        + Command Processors + I/O Controllers                                 ││
+│  └──────────────────────────────────────┬──────────────────────────┬─────────────────────────────┘│
+│              ┌──────────────────────────┼──────────────────────────┼──────────────────────┐       ││
+│              │                          │                          │                      │       ││
+│  ┌───────────▼───────────┐  ┌───────────▼───────────┐  ┌───────────▼───────────┐  ┌─────▼─────────││
+│  │   XCD 4 (38 CUs)      │  │   XCD 5 (38 CUs)      │  │   XCD 6 (38 CUs)      │  │  XCD 7 (38 CUs││
+│  ├───────────────────────┤  ├───────────────────────┤  ├───────────────────────┤  ├───────────────┤│
+│  │ Same structure as     │  │ Same structure as     │  │ Same structure as     │  │ Same structure││
+│  │ XCD 0-3 above         │  │ XCD 0-3 above         │  │ XCD 0-3 above         │  │ XCD 0-3 above ││
+│  │ 38 CUs + L2 + ACEs    │  │ 38 CUs + L2 + ACEs    │  │ 38 CUs + L2 + ACEs    │  │ 38 CUs + L2 + ││
+│  └───────────┬───────────┘  └───────────┬───────────┘  └───────────┬───────────┘  └───────┬───────││
+│              │                          │                          │                      │       ││
+│  ────────────▼──────────────────────────▼──────────────────────────▼──────────────────────▼────── ││
+│                                                                                                     ││
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────┐│
+│  │  HBM3       │  │  HBM3       │  │  HBM3       │  │  HBM3       │  │  HBM3       │  │  HBM3   ││
+│  │  Stack 0    │  │  Stack 1    │  │  Stack 2    │  │  Stack 3    │  │  Stack 4    │  │  Stack 5││
+│  │  24 GB      │  │  24 GB      │  │  24 GB      │  │  24 GB      │  │  24 GB      │  │  24 GB  ││
+│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  └─────────┘│
+│  ┌─────────────┐  ┌─────────────┐                                                                 ││
+│  │  HBM3       │  │  HBM3       │                                                                 ││
+│  │  Stack 6    │  │  Stack 7    │         Total Memory: 192 GB HBM3                               ││
+│  │  24 GB      │  │  24 GB      │         Bandwidth: 5.3 TB/s                                     ││
+│  └─────────────┘  └─────────────┘                                                                 ││
+│                                                                                                     ││
+├─────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                  SUMMARY SPECIFICATIONS                                             │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│  Chiplets:        8 XCDs (Accelerator Complex Dies)                                                │
+│  Compute Units:   304 total (38 per XCD)                                                           │
+│  Stream Cores:    19,456 (64 per CU)                                                               │
+│  SIMD Units:      1,216 (4 per CU × 304 CUs)                                                       │
+│                                                                                                     │
+│  Memory Hierarchy:                                                                                 │
+│    Registers:     512 KB VGPR + 12.5 KB SGPR (per CU)                                              │
+│    LDS:           64 KB per CU                                                                     │
+│    L1 Cache:      32 KB per CU (9.7 MB total)                                                      │
+│    L2 Cache:      32 MB total (4 MB per XCD)                                                       │
+│    L3 Cache:      256 MB (Infinity Cache)                                                          │
+│    HBM3:          192 GB @ 5.3 TB/s                                                                │
+│                                                                                                     │
+│  Compute Performance:                                                                              │
+│    FP64:          163.4 TFLOPS                                                                     │
+│    FP32:          163.4 TFLOPS                                                                     │
+│    FP16/BF16:     1,307.4 TFLOPS                                                                   │
+│    FP8/INT8:      2,614.9 TFLOPS                                                                   │
+│                                                                                                     │
+│  Interconnect:    7 Infinity Fabric links per GPU (full-mesh 8-GPU topology)                       │
+│  Power:           750W TDP                                                                         │
+│  Process:         5nm (XCDs) + 6nm (I/O dies)                                                      │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Key Features
+
+**Multi-Chiplet Design:**
+- 8 XCDs connected via Infinity Fabric
+- Each XCD contains 38 Compute Units
+- Total of 304 CUs across the entire package
+- Enables massive parallel processing capability
+
+**Memory System:**
+- 192 GB HBM3 memory (8 stacks × 24 GB)
+- 5.3 TB/s memory bandwidth
+- 256 MB L3 Infinity Cache for bandwidth amplification
+- 32 MB L2 cache distributed across XCDs
+- Massive 155 MB of register file space
+
+**Compute Capabilities:**
+- 19,456 stream processors (64 per CU)
+- Matrix cores in every CU for AI/ML acceleration
+- Mixed precision support: FP64, FP32, TF32, FP16, BF16, FP8, INT8
+- Peak AI performance: 2.6 PFLOPS (FP8)
+
+**Infinity Fabric:**
+- Connects all 8 XCDs within package
+- Enables GPU-to-GPU communication in multi-GPU systems
+- 7 links per GPU for full-mesh 8-GPU topology
+- Critical for distributed training workloads
+
+**Target Applications:**
+- Large Language Models (LLMs)
+- Deep Learning Training
+- High Performance Computing (HPC)
+- Scientific Simulations
+- AI Inference at Scale
+
+**Comparison to CDNA 2 (MI250X):**
+- 38% more compute units (304 vs 220)
+- 50% more memory (192 GB vs 128 GB)
+- 66% faster memory bandwidth (5.3 TB/s vs 3.2 TB/s)
+- 16x larger L3 cache (256 MB vs 16 MB)
+- Enhanced AI performance with FP8 support
+
+This architecture represents AMD's most powerful GPU for AI and HPC workloads, competing directly with NVIDIA's H100 and offering superior memory capacity and bandwidth.
+
 ## Compute Unit (CU)
 
 The fundamental building block of AMD GPU architecture. A Compute Unit contains SIMD units, vector and scalar ALUs, local data share (LDS) memory, L1 cache, and scheduling hardware. Analogous to NVIDIA's Streaming Multiprocessor (SM).

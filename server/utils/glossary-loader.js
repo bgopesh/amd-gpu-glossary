@@ -19,6 +19,7 @@ const SECTIONS = [
     id: 'device-hardware',
     title: 'Device Hardware',
     file: '01-device-hardware.md',
+    overviewFile: '01a-device-hardware-overview.md',
     description: 'Physical components and architecture of AMD GPUs'
   },
   {
@@ -46,6 +47,7 @@ class GlossaryLoader {
     this.glossaryPath = path.join(__dirname, '../../gpu-glossary');
     this.sections = [];
     this.termsById = new Map();
+    this.overviews = new Map();
     this.specs = null;
   }
 
@@ -73,10 +75,28 @@ class GlossaryLoader {
     // Parse terms from markdown
     const terms = this.parseTerms(content, sectionDef.id);
 
+    // Load overview file if specified
+    if (sectionDef.overviewFile) {
+      const overviewPath = path.join(this.glossaryPath, sectionDef.overviewFile);
+      try {
+        const overviewContent = fs.readFileSync(overviewPath, 'utf-8');
+        const overviewHtml = md.render(overviewContent);
+        this.overviews.set(sectionDef.id, {
+          id: sectionDef.id,
+          title: sectionDef.title,
+          content: overviewContent,
+          html: overviewHtml
+        });
+      } catch (error) {
+        console.error(`Warning: Could not load overview file ${sectionDef.overviewFile}:`, error.message);
+      }
+    }
+
     return {
       id: sectionDef.id,
       title: sectionDef.title,
       description: sectionDef.description,
+      hasOverview: !!sectionDef.overviewFile,
       terms: terms
     };
   }
@@ -150,12 +170,18 @@ class GlossaryLoader {
       id: section.id,
       title: section.title,
       description: section.description,
+      hasOverview: section.hasOverview,
       terms: section.terms.map(term => ({
         id: term.id,
         slug: term.slug,
         title: term.title
       }))
     }));
+  }
+
+  // Get overview for a section
+  getOverview(sectionId) {
+    return this.overviews.get(sectionId);
   }
 
   // Get a specific term by ID
