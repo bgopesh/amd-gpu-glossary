@@ -39,6 +39,12 @@ const SECTIONS = [
     title: 'Performance',
     file: '04-performance.md',
     description: 'Optimization and profiling tools'
+  },
+  {
+    id: 'understanding-isa',
+    title: 'Understanding ISA',
+    file: '05-understanding-isa.md',
+    description: 'Reading and interpreting AMDGCN Instruction Set Architecture'
   }
 ];
 
