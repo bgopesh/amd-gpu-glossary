@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 900" style="background-color: #1a1a1a;">
+  <defs>
+    <linearGradient id="xcdBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#2a3a5a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a2a4a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cuGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a6a9a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3a5a8a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="l2Grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8a6a4a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6a4a2a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="aceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6a4a8a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#5a3a7a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ifGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#c8102e;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#e84e1b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c8102e;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="500" y="35" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    XCD (Accelerator Complex Die)
+  </text>
+  <text x="500" y="58" font-family="Arial, sans-serif" font-size="14" fill="#cccccc" text-anchor="middle">
+    CDNA 3 Architecture - Single Chiplet with 38 Compute Units
+  </text>
+
+  <!-- Main XCD Border -->
+  <rect x="50" y="80" width="900" height="740" fill="url(#xcdBgGrad)" stroke="#c8102e" stroke-width="3" rx="8"/>
+  <text x="500" y="105" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Single XCD Chiplet
+  </text>
+
+  <!-- Compute Units Grid -->
+  <g id="cu-array">
+    <text x="80" y="140" font-family="Arial, sans-serif" font-size="14" fill="#aaccff">
+      38 Compute Units (40 total, 2 disabled for yield):
+    </text>
+
+    <!-- Row 1: CU 0-7 -->
+    <rect x="70" y="155" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="115" y="185" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 0</text>
+    <text x="115" y="202" font-family="Arial, sans-serif" font-size="8" fill="#ccddff" text-anchor="middle">64 SP</text>
+    <text x="115" y="214" font-family="Arial, sans-serif" font-size="8" fill="#ccddff" text-anchor="middle">4 SIMD</text>
+
+    <rect x="170" y="155" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="215" y="185" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 1</text>
+    <text x="215" y="202" font-family="Arial, sans-serif" font-size="8" fill="#ccddff" text-anchor="middle">64 SP</text>
+
+    <rect x="270" y="155" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="315" y="185" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 2</text>
+    <text x="315" y="202" font-family="Arial, sans-serif" font-size="8" fill="#ccddff" text-anchor="middle">64 SP</text>
+
+    <rect x="370" y="155" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="415" y="185" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 3</text>
+
+    <rect x="470" y="155" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="515" y="185" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 4</text>
+
+    <rect x="570" y="155" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="615" y="185" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 5</text>
+
+    <rect x="670" y="155" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="715" y="185" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 6</text>
+
+    <rect x="770" y="155" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="815" y="185" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 7</text>
+
+    <!-- Row 2: CU 8-15 -->
+    <rect x="70" y="235" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="115" y="265" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 8</text>
+
+    <rect x="170" y="235" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="215" y="265" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 9</text>
+
+    <rect x="270" y="235" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="315" y="265" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 10</text>
+
+    <rect x="370" y="235" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="415" y="265" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 11</text>
+
+    <rect x="470" y="235" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="515" y="265" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 12</text>
+
+    <rect x="570" y="235" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="615" y="265" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 13</text>
+
+    <rect x="670" y="235" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="715" y="265" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 14</text>
+
+    <rect x="770" y="235" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="815" y="265" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 15</text>
+
+    <!-- Row 3: CU 16-23 -->
+    <rect x="70" y="315" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="115" y="345" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 16</text>
+
+    <rect x="170" y="315" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="215" y="345" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 17</text>
+
+    <rect x="270" y="315" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="315" y="345" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 18</text>
+
+    <rect x="370" y="315" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="415" y="345" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 19</text>
+
+    <rect x="470" y="315" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="515" y="345" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 20</text>
+
+    <rect x="570" y="315" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="615" y="345" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 21</text>
+
+    <rect x="670" y="315" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="715" y="345" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 22</text>
+
+    <rect x="770" y="315" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="815" y="345" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 23</text>
+
+    <!-- Middle dots -->
+    <text x="500" y="420" font-family="Arial, sans-serif" font-size="24" fill="#666666" text-anchor="middle">...</text>
+    <text x="500" y="445" font-family="Arial, sans-serif" font-size="12" fill="#888888" text-anchor="middle">
+      (CU 24-32 continues in same pattern)
+    </text>
+
+    <!-- Last Row: CU 33-37 -->
+    <rect x="70" y="465" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="115" y="495" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 33</text>
+
+    <rect x="170" y="465" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="215" y="495" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 34</text>
+
+    <rect x="270" y="465" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="315" y="495" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 35</text>
+
+    <rect x="370" y="465" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="415" y="495" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 36</text>
+
+    <rect x="470" y="465" width="90" height="70" fill="url(#cuGrad)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="515" y="495" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 37</text>
+
+    <!-- Disabled CUs -->
+    <rect x="570" y="465" width="90" height="70" fill="#3a3a3a" stroke="#555555" stroke-width="2" stroke-dasharray="5,5" rx="4"/>
+    <text x="615" y="495" font-family="Arial, sans-serif" font-size="11" fill="#888888" text-anchor="middle">Disabled</text>
+    <text x="615" y="510" font-family="Arial, sans-serif" font-size="9" fill="#666666" text-anchor="middle">(Yield)</text>
+
+    <rect x="670" y="465" width="90" height="70" fill="#3a3a3a" stroke="#555555" stroke-width="2" stroke-dasharray="5,5" rx="4"/>
+    <text x="715" y="495" font-family="Arial, sans-serif" font-size="11" fill="#888888" text-anchor="middle">Disabled</text>
+    <text x="715" y="510" font-family="Arial, sans-serif" font-size="9" fill="#666666" text-anchor="middle">(Yield)</text>
+  </g>
+
+  <!-- L2 Cache -->
+  <rect x="70" y="555" width="860" height="60" fill="url(#l2Grad)" stroke="#aa8a6a" stroke-width="3" rx="6"/>
+  <text x="500" y="580" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    L2 Cache - 4 MB
+  </text>
+  <text x="500" y="600" font-family="Arial, sans-serif" font-size="11" fill="#ffddaa" text-anchor="middle">
+    Shared by all 38 active Compute Units in this XCD
+  </text>
+
+  <!-- Asynchronous Compute Engines (ACEs) -->
+  <g id="aces">
+    <text x="500" y="640" font-family="Arial, sans-serif" font-size="14" fill="#ddaaff" text-anchor="middle">
+      Asynchronous Compute Engines (ACEs):
+    </text>
+
+    <rect x="100" y="655" width="180" height="80" fill="url(#aceGrad)" stroke="#7a5a9a" stroke-width="2" rx="4"/>
+    <text x="190" y="685" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      ACE 0
+    </text>
+    <text x="190" y="703" font-family="Arial, sans-serif" font-size="9" fill="#ddbbff" text-anchor="middle">
+      Command Processor
+    </text>
+    <text x="190" y="717" font-family="Arial, sans-serif" font-size="9" fill="#ddbbff" text-anchor="middle">
+      Workgroup Scheduler
+    </text>
+
+    <rect x="300" y="655" width="180" height="80" fill="url(#aceGrad)" stroke="#7a5a9a" stroke-width="2" rx="4"/>
+    <text x="390" y="685" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      ACE 1
+    </text>
+    <text x="390" y="703" font-family="Arial, sans-serif" font-size="9" fill="#ddbbff" text-anchor="middle">
+      Command Processor
+    </text>
+
+    <rect x="500" y="655" width="180" height="80" fill="url(#aceGrad)" stroke="#7a5a9a" stroke-width="2" rx="4"/>
+    <text x="590" y="685" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      ACE 2
+    </text>
+    <text x="590" y="703" font-family="Arial, sans-serif" font-size="9" fill="#ddbbff" text-anchor="middle">
+      Command Processor
+    </text>
+
+    <rect x="700" y="655" width="180" height="80" fill="url(#aceGrad)" stroke="#7a5a9a" stroke-width="2" rx="4"/>
+    <text x="790" y="685" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      ACE 3
+    </text>
+    <text x="790" y="703" font-family="Arial, sans-serif" font-size="9" fill="#ddbbff" text-anchor="middle">
+      Command Processor
+    </text>
+  </g>
+
+  <!-- Infinity Fabric Connection -->
+  <rect x="70" y="755" width="860" height="50" fill="url(#ifGrad)" stroke="#e84e1b" stroke-width="3" rx="6"/>
+  <text x="500" y="785" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    ↕ Infinity Fabric Links ↕
+  </text>
+  <text x="500" y="800" font-family="Arial, sans-serif" font-size="10" fill="#ffcccc" text-anchor="middle">
+    Connects to other XCDs and HBM memory controllers
+  </text>
+
+  <!-- Summary Box -->
+  <rect x="70" y="830" width="860" height="50" fill="#2a2a2a" stroke="#555555" stroke-width="1" rx="4"/>
+  <text x="500" y="850" font-family="Arial, sans-serif" font-size="11" fill="#aaaaaa" text-anchor="middle">
+    <tspan font-weight="bold">XCD Summary:</tspan> 38 active CUs (40 total) | 4 MB L2 Cache | 4 ACEs | 2,432 Stream Processors per XCD
+  </text>
+  <text x="500" y="867" font-family="Arial, sans-serif" font-size="10" fill="#888888" text-anchor="middle">
+    MI300X has 8 XCDs = 304 total active CUs | 32 MB total L2 (8 × 4 MB)
+  </text>
+
+  <!-- Footer -->
+  <text x="500" y="895" font-family="Arial, sans-serif" font-size="9" fill="#666666" text-anchor="middle">
+    Single XCD Chiplet | Part of MI300X multi-chiplet package | CDNA 3 Architecture
+  </text>
+</svg>

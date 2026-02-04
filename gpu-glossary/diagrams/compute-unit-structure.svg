@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" style="background-color: #1a1a1a;">
+  <defs>
+    <linearGradient id="simdGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a6aaa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a4a8a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="matrixGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#aa4a6a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#8a2a4a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="registerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6a8a4a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a6a2a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ldsGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#8a6a4a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6a4a2a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cacheGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#6a5a7a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#4a3a5a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="schedulerGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#c8102e;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#a8002e;stop-opacity:0.8" />
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="30" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Compute Unit (CU) Internal Structure
+  </text>
+  <text x="400" y="55" font-family="Arial, sans-serif" font-size="14" fill="#cccccc" text-anchor="middle">
+    AMD CDNA 3 Architecture Building Block
+  </text>
+
+  <!-- Main CU border -->
+  <rect x="50" y="80" width="700" height="750" fill="none" stroke="#c8102e" stroke-width="3" rx="8"/>
+
+  <!-- Scheduler & Dispatch Logic (Top) -->
+  <rect x="70" y="100" width="660" height="60" fill="url(#schedulerGradient)" stroke="#e84e1b" stroke-width="2" rx="4"/>
+  <text x="400" y="125" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Scheduler &amp; Dispatch Logic
+  </text>
+  <text x="400" y="145" font-family="Arial, sans-serif" font-size="10" fill="#ffcccc" text-anchor="middle">
+    Wavefront scheduling, instruction decode, resource allocation
+  </text>
+
+  <!-- Arrow down -->
+  <line x1="400" y1="160" x2="400" y2="190" stroke="#aaaaaa" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+      <polygon points="0 0, 10 5, 0 10" fill="#aaaaaa" />
+    </marker>
+  </defs>
+
+  <!-- SIMD Units Section -->
+  <g id="simd-section">
+    <!-- SIMD 0 -->
+    <rect x="70" y="200" width="155" height="140" fill="url(#simdGradient)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="147.5" y="225" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      SIMD Unit 0
+    </text>
+    <text x="147.5" y="245" font-family="Arial, sans-serif" font-size="11" fill="#ccddff" text-anchor="middle">
+      64 Lanes
+    </text>
+    <text x="147.5" y="265" font-family="Arial, sans-serif" font-size="9" fill="#aaccee">Vector ALU</text>
+    <text x="147.5" y="280" font-family="Arial, sans-serif" font-size="9" fill="#aaccee">FP64/FP32/FP16</text>
+    <text x="147.5" y="295" font-family="Arial, sans-serif" font-size="9" fill="#aaccee">INT ops</text>
+    <text x="147.5" y="310" font-family="Arial, sans-serif" font-size="9" fill="#aaccee">Transcendentals</text>
+    <rect x="80" y="320" width="135" height="10" fill="#3a5a9a" stroke="none"/>
+    <text x="147.5" y="329" font-family="Arial, sans-serif" font-size="8" fill="#ffffff" text-anchor="middle">64-wide vector</text>
+
+    <!-- SIMD 1 -->
+    <rect x="240" y="200" width="155" height="140" fill="url(#simdGradient)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="317.5" y="225" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      SIMD Unit 1
+    </text>
+    <text x="317.5" y="245" font-family="Arial, sans-serif" font-size="11" fill="#ccddff" text-anchor="middle">
+      64 Lanes
+    </text>
+    <text x="317.5" y="270" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">Same capabilities</text>
+    <text x="317.5" y="285" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">as SIMD 0</text>
+    <rect x="250" y="320" width="135" height="10" fill="#3a5a9a" stroke="none"/>
+    <text x="317.5" y="329" font-family="Arial, sans-serif" font-size="8" fill="#ffffff" text-anchor="middle">64-wide vector</text>
+
+    <!-- SIMD 2 -->
+    <rect x="410" y="200" width="155" height="140" fill="url(#simdGradient)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="487.5" y="225" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      SIMD Unit 2
+    </text>
+    <text x="487.5" y="245" font-family="Arial, sans-serif" font-size="11" fill="#ccddff" text-anchor="middle">
+      64 Lanes
+    </text>
+    <text x="487.5" y="270" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">Same capabilities</text>
+    <text x="487.5" y="285" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">as SIMD 0</text>
+    <rect x="420" y="320" width="135" height="10" fill="#3a5a9a" stroke="none"/>
+    <text x="487.5" y="329" font-family="Arial, sans-serif" font-size="8" fill="#ffffff" text-anchor="middle">64-wide vector</text>
+
+    <!-- SIMD 3 -->
+    <rect x="580" y="200" width="150" height="140" fill="url(#simdGradient)" stroke="#5a7aaa" stroke-width="2" rx="4"/>
+    <text x="655" y="225" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      SIMD Unit 3
+    </text>
+    <text x="655" y="245" font-family="Arial, sans-serif" font-size="11" fill="#ccddff" text-anchor="middle">
+      64 Lanes
+    </text>
+    <text x="655" y="270" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">Same capabilities</text>
+    <text x="655" y="285" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">as SIMD 0</text>
+    <rect x="590" y="320" width="130" height="10" fill="#3a5a9a" stroke="none"/>
+    <text x="655" y="329" font-family="Arial, sans-serif" font-size="8" fill="#ffffff" text-anchor="middle">64-wide vector</text>
+  </g>
+
+  <!-- Matrix Core Engine -->
+  <rect x="70" y="360" width="660" height="100" fill="url(#matrixGradient)" stroke="#aa5a7a" stroke-width="2" rx="4"/>
+  <text x="400" y="385" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Matrix Core Engine (MFMA)
+  </text>
+  <text x="400" y="405" font-family="Arial, sans-serif" font-size="11" fill="#ffccdd" text-anchor="middle">
+    AI/ML Accelerator: Matrix Fused Multiply-Add
+  </text>
+  <text x="200" y="425" font-family="Arial, sans-serif" font-size="9" fill="#ffddee">FP64 Matrix</text>
+  <text x="200" y="440" font-family="Arial, sans-serif" font-size="9" fill="#ffddee">FP32 Matrix</text>
+  <text x="400" y="425" font-family="Arial, sans-serif" font-size="9" fill="#ffddee">FP16/BF16 Matrix</text>
+  <text x="400" y="440" font-family="Arial, sans-serif" font-size="9" fill="#ffddee">INT8 Matrix</text>
+  <text x="600" y="425" font-family="Arial, sans-serif" font-size="9" fill="#ffddee">16×16, 32×32</text>
+  <text x="600" y="440" font-family="Arial, sans-serif" font-size="9" fill="#ffddee">matrix tiles</text>
+
+  <!-- Register File -->
+  <rect x="70" y="480" width="320" height="120" fill="url(#registerGradient)" stroke="#7a9a5a" stroke-width="2" rx="4"/>
+  <text x="230" y="505" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Register File
+  </text>
+  <text x="230" y="525" font-family="Arial, sans-serif" font-size="11" fill="#ccffcc" text-anchor="middle">
+    512 KB VGPR (Vector GPR)
+  </text>
+  <text x="230" y="545" font-family="Arial, sans-serif" font-size="10" fill="#aaffaa" text-anchor="middle">
+    Per-thread registers
+  </text>
+  <text x="230" y="560" font-family="Arial, sans-serif" font-size="10" fill="#aaffaa" text-anchor="middle">
+    256 VGPRs × 64 lanes × wavefronts
+  </text>
+  <rect x="80" y="570" width="300" height="20" fill="#5a7a3a" stroke="#8aaa5a" stroke-width="1" rx="2"/>
+  <text x="230" y="584" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">
+    + 12.5 KB SGPR (Scalar GPR)
+  </text>
+
+  <!-- LDS (Local Data Share) -->
+  <rect x="410" y="480" width="320" height="120" fill="url(#ldsGradient)" stroke="#aa8a6a" stroke-width="2" rx="4"/>
+  <text x="570" y="505" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    LDS (Local Data Share)
+  </text>
+  <text x="570" y="525" font-family="Arial, sans-serif" font-size="11" fill="#ffddbb" text-anchor="middle">
+    64 KB
+  </text>
+  <text x="570" y="545" font-family="Arial, sans-serif" font-size="10" fill="#ffccaa" text-anchor="middle">
+    Software-managed cache
+  </text>
+  <text x="570" y="560" font-family="Arial, sans-serif" font-size="10" fill="#ffccaa" text-anchor="middle">
+    Shared by workgroup threads
+  </text>
+  <text x="570" y="575" font-family="Arial, sans-serif" font-size="9" fill="#ddaa88">Synchronization point</text>
+  <text x="570" y="588" font-family="Arial, sans-serif" font-size="9" fill="#ddaa88">~15 cycles latency</text>
+
+  <!-- L1 Data Cache -->
+  <rect x="70" y="620" width="660" height="80" fill="url(#cacheGradient)" stroke="#7a6a8a" stroke-width="2" rx="4"/>
+  <text x="400" y="645" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    L1 Data Cache
+  </text>
+  <text x="400" y="665" font-family="Arial, sans-serif" font-size="11" fill="#ddccff" text-anchor="middle">
+    32 KB per CU
+  </text>
+  <text x="400" y="683" font-family="Arial, sans-serif" font-size="10" fill="#ccbbee" text-anchor="middle">
+    Hardware-managed | 128 byte cache lines | ~40 cycles latency
+  </text>
+
+  <!-- Arrow down to L2 -->
+  <line x1="400" y1="700" x2="400" y2="730" stroke="#aaaaaa" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- L2 Cache (Shared across CUs in XCD) -->
+  <rect x="120" y="730" width="560" height="70" fill="#3a3a5a" stroke="#7a7aaa" stroke-width="2" rx="4"/>
+  <text x="400" y="755" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ddddff" text-anchor="middle">
+    L2 Cache (Shared across all CUs in XCD)
+  </text>
+  <text x="400" y="775" font-family="Arial, sans-serif" font-size="11" fill="#bbbbee" text-anchor="middle">
+    4 MB per XCD (shared by 38 CUs)
+  </text>
+  <text x="400" y="790" font-family="Arial, sans-serif" font-size="9" fill="#9999dd">~150 cycles latency</text>
+
+  <!-- Info Box -->
+  <rect x="70" y="820" width="660" height="60" fill="#2a2a2a" stroke="#555555" stroke-width="1" rx="4"/>
+  <text x="400" y="840" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#c8102e" text-anchor="middle">
+    Total CU Resources
+  </text>
+  <text x="150" y="860" font-family="Courier New, monospace" font-size="9" fill="#aaaaaa">256 Stream Processors (4×64)</text>
+  <text x="400" y="860" font-family="Courier New, monospace" font-size="9" fill="#aaaaaa">Max 40 wavefronts/CU</text>
+  <text x="630" y="860" font-family="Courier New, monospace" font-size="9" fill="#aaaaaa">Peak: 82 TFLOPS (MI300X)</text>
+
+  <!-- Footer -->
+  <text x="400" y="905" font-family="Arial, sans-serif" font-size="9" fill="#666666" text-anchor="middle">
+    Single Compute Unit | 304 CUs per MI300X GPU
+  </text>
+</svg>

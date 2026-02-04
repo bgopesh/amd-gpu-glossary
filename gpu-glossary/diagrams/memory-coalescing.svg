@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" style="background-color: #1a1a1a;">
+  <defs>
+    <linearGradient id="goodGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#00cc00;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#008800;stop-opacity:0.8" />
+    </linearGradient>
+    <linearGradient id="badGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#cc0000;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#880000;stop-opacity:0.8" />
+    </linearGradient>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L0,10 L10,5 z" fill="#00cc00" />
+    </marker>
+    <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L0,10 L10,5 z" fill="#cc0000" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="35" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Memory Coalescing: Coalesced vs Uncoalesced Access
+  </text>
+  <text x="600" y="58" font-family="Arial, sans-serif" font-size="14" fill="#cccccc" text-anchor="middle">
+    Impact on Memory Bandwidth and Performance
+  </text>
+
+  <!-- GOOD: Coalesced Access -->
+  <g id="coalesced">
+    <rect x="50" y="90" width="520" height="320" fill="#002200" stroke="#00cc00" stroke-width="3" rx="8"/>
+    <text x="310" y="120" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#00ff00" text-anchor="middle">
+      ✓ GOOD: Coalesced Access (Sequential)
+    </text>
+
+    <!-- Threads -->
+    <text x="70" y="155" font-family="Arial, sans-serif" font-size="12" fill="#aaffaa">Threads (Wavefront):</text>
+    <rect x="70" y="165" width="40" height="30" fill="url(#goodGrad)" stroke="#00cc00" stroke-width="1" rx="2"/>
+    <text x="90" y="185" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">T0</text>
+    <rect x="115" y="165" width="40" height="30" fill="url(#goodGrad)" stroke="#00cc00" stroke-width="1" rx="2"/>
+    <text x="135" y="185" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">T1</text>
+    <rect x="160" y="165" width="40" height="30" fill="url(#goodGrad)" stroke="#00cc00" stroke-width="1" rx="2"/>
+    <text x="180" y="185" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">T2</text>
+    <rect x="205" y="165" width="40" height="30" fill="url(#goodGrad)" stroke="#00cc00" stroke-width="1" rx="2"/>
+    <text x="225" y="185" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">T3</text>
+    <text x="260" y="185" font-family="Arial, sans-serif" font-size="10" fill="#666666" text-anchor="middle">...</text>
+    <rect x="285" y="165" width="40" height="30" fill="url(#goodGrad)" stroke="#00cc00" stroke-width="1" rx="2"/>
+    <text x="305" y="185" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">T63</text>
+
+    <!-- Arrows showing sequential access -->
+    <line x1="90" y1="195" x2="90" y2="245" stroke="#00cc00" stroke-width="2" marker-end="url(#arrowGreen)"/>
+    <line x1="135" y1="195" x2="135" y2="245" stroke="#00cc00" stroke-width="2" marker-end="url(#arrowGreen)"/>
+    <line x1="180" y1="195" x2="180" y2="245" stroke="#00cc00" stroke-width="2" marker-end="url(#arrowGreen)"/>
+    <line x1="225" y1="195" x2="225" y2="245" stroke="#00cc00" stroke-width="2" marker-end="url(#arrowGreen)"/>
+    <line x1="305" y1="195" x2="305" y2="245" stroke="#00cc00" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+    <!-- Memory Access Pattern (Sequential) -->
+    <text x="70" y="265" font-family="Arial, sans-serif" font-size="12" fill="#aaffaa">Memory Addresses:</text>
+    <rect x="70" y="275" width="480" height="40" fill="#003300" stroke="#00cc00" stroke-width="2" rx="3"/>
+    <text x="70" y="263" font-family="Courier New, monospace" font-size="9" fill="#00cc00">Sequential addresses:</text>
+    <rect x="75" y="280" width="35" height="30" fill="#005500" stroke="#00cc00" stroke-width="1"/>
+    <text x="92.5" y="298" font-family="Courier New, monospace" font-size="8" fill="#00ff00" text-anchor="middle">0x00</text>
+    <rect x="115" y="280" width="35" height="30" fill="#005500" stroke="#00cc00" stroke-width="1"/>
+    <text x="132.5" y="298" font-family="Courier New, monospace" font-size="8" fill="#00ff00" text-anchor="middle">0x04</text>
+    <rect x="155" y="280" width="35" height="30" fill="#005500" stroke="#00cc00" stroke-width="1"/>
+    <text x="172.5" y="298" font-family="Courier New, monospace" font-size="8" fill="#00ff00" text-anchor="middle">0x08</text>
+    <rect x="195" y="280" width="35" height="30" fill="#005500" stroke="#00cc00" stroke-width="1"/>
+    <text x="212.5" y="298" font-family="Courier New, monospace" font-size="8" fill="#00ff00" text-anchor="middle">0x0C</text>
+    <text x="245" y="298" font-family="Courier New, monospace" font-size="10" fill="#00cc00" text-anchor="middle">...</text>
+    <rect x="275" y="280" width="35" height="30" fill="#005500" stroke="#00cc00" stroke-width="1"/>
+    <text x="292.5" y="298" font-family="Courier New, monospace" font-size="8" fill="#00ff00" text-anchor="middle">0xFC</text>
+    <text x="330" y="298" font-family="Arial, sans-serif" font-size="9" fill="#00cc00">(Contiguous)</text>
+
+    <!-- Memory Transactions -->
+    <text x="70" y="340" font-family="Arial, sans-serif" font-size="12" fill="#aaffaa">Memory Transactions:</text>
+    <rect x="70" y="350" width="240" height="40" fill="#005500" stroke="#00cc00" stroke-width="2" rx="3"/>
+    <text x="190" y="375" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#00ff00" text-anchor="middle">
+      1-2 Transactions
+    </text>
+    <rect x="320" y="350" width="240" height="40" fill="#005500" stroke="#00cc00" stroke-width="2" rx="3"/>
+    <text x="440" y="375" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#00ff00" text-anchor="middle">
+      128-byte cache line
+    </text>
+  </g>
+
+  <!-- BAD: Uncoalesced Access -->
+  <g id="uncoalesced">
+    <rect x="630" y="90" width="520" height="320" fill="#220000" stroke="#cc0000" stroke-width="3" rx="8"/>
+    <text x="890" y="120" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ff0000" text-anchor="middle">
+      ✗ BAD: Uncoalesced Access (Random/Strided)
+    </text>
+
+    <!-- Threads -->
+    <text x="650" y="155" font-family="Arial, sans-serif" font-size="12" fill="#ffaaaa">Threads (Wavefront):</text>
+    <rect x="650" y="165" width="40" height="30" fill="url(#badGrad)" stroke="#cc0000" stroke-width="1" rx="2"/>
+    <text x="670" y="185" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">T0</text>
+    <rect x="695" y="165" width="40" height="30" fill="url(#badGrad)" stroke="#cc0000" stroke-width="1" rx="2"/>
+    <text x="715" y="185" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">T1</text>
+    <rect x="740" y="165" width="40" height="30" fill="url(#badGrad)" stroke="#cc0000" stroke-width="1" rx="2"/>
+    <text x="760" y="185" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">T2</text>
+    <rect x="785" y="165" width="40" height="30" fill="url(#badGrad)" stroke="#cc0000" stroke-width="1" rx="2"/>
+    <text x="805" y="185" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">T3</text>
+    <text x="840" y="185" font-family="Arial, sans-serif" font-size="10" fill="#666666" text-anchor="middle">...</text>
+    <rect x="865" y="165" width="40" height="30" fill="url(#badGrad)" stroke="#cc0000" stroke-width="1" rx="2"/>
+    <text x="885" y="185" font-family="Arial, sans-serif" font-size="10" fill="#ffffff" text-anchor="middle">T63</text>
+
+    <!-- Arrows showing random access -->
+    <path d="M 670 195 Q 670 220, 652 245" stroke="#cc0000" stroke-width="2" fill="none" marker-end="url(#arrowRed)"/>
+    <path d="M 715 195 Q 715 220, 812 245" stroke="#cc0000" stroke-width="2" fill="none" marker-end="url(#arrowRed)"/>
+    <path d="M 760 195 Q 760 220, 692 245" stroke="#cc0000" stroke-width="2" fill="none" marker-end="url(#arrowRed)"/>
+    <path d="M 805 195 Q 805 220, 1052 245" stroke="#cc0000" stroke-width="2" fill="none" marker-end="url(#arrowRed)"/>
+    <path d="M 885 195 Q 885 220, 932 245" stroke="#cc0000" stroke-width="2" fill="none" marker-end="url(#arrowRed)"/>
+
+    <!-- Memory Access Pattern (Random/Strided) -->
+    <text x="650" y="265" font-family="Arial, sans-serif" font-size="12" fill="#ffaaaa">Memory Addresses:</text>
+    <rect x="650" y="275" width="480" height="40" fill="#330000" stroke="#cc0000" stroke-width="2" rx="3"/>
+    <text x="650" y="263" font-family="Courier New, monospace" font-size="9" fill="#cc0000">Random/strided addresses:</text>
+    <rect x="655" y="280" width="35" height="30" fill="#550000" stroke="#cc0000" stroke-width="1"/>
+    <text x="672.5" y="298" font-family="Courier New, monospace" font-size="8" fill="#ff4444" text-anchor="middle">0x00</text>
+    <rect x="695" y="280" width="35" height="30" fill="#550000" stroke="#cc0000" stroke-width="1"/>
+    <text x="712.5" y="298" font-family="Courier New, monospace" font-size="8" fill="#ff4444" text-anchor="middle">0xC0</text>
+    <rect x="735" y="280" width="35" height="30" fill="#550000" stroke="#cc0000" stroke-width="1"/>
+    <text x="752.5" y="298" font-family="Courier New, monospace" font-size="8" fill="#ff4444" text-anchor="middle">0x40</text>
+    <rect x="775" y="280" width="35" height="30" fill="#550000" stroke="#cc0000" stroke-width="1"/>
+    <text x="792.5" y="298" font-family="Courier New, monospace" font-size="8" fill="#ff4444" text-anchor="middle">0x3C</text>
+    <text x="825" y="298" font-family="Courier New, monospace" font-size="10" fill="#cc0000" text-anchor="middle">...</text>
+    <rect x="855" y="280" width="35" height="30" fill="#550000" stroke="#cc0000" stroke-width="1"/>
+    <text x="872.5" y="298" font-family="Courier New, monospace" font-size="8" fill="#ff4444" text-anchor="middle">0x80</text>
+    <text x="910" y="298" font-family="Arial, sans-serif" font-size="9" fill="#cc0000">(Scattered)</text>
+
+    <!-- Memory Transactions -->
+    <text x="650" y="340" font-family="Arial, sans-serif" font-size="12" fill="#ffaaaa">Memory Transactions:</text>
+    <rect x="650" y="350" width="240" height="40" fill="#550000" stroke="#cc0000" stroke-width="2" rx="3"/>
+    <text x="770" y="375" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ff4444" text-anchor="middle">
+      Up to 64 Transactions
+    </text>
+    <rect x="900" y="350" width="240" height="40" fill="#550000" stroke="#cc0000" stroke-width="2" rx="3"/>
+    <text x="1020" y="375" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ff4444" text-anchor="middle">
+      Separate cache lines
+    </text>
+  </g>
+
+  <!-- Performance Impact Box -->
+  <rect x="50" y="440" width="1100" height="160" fill="#2a2a2a" stroke="#c8102e" stroke-width="3" rx="8"/>
+  <text x="600" y="475" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#c8102e" text-anchor="middle">
+    Performance Impact
+  </text>
+
+  <!-- Good side -->
+  <rect x="70" y="490" width="500" height="95" fill="#002200" stroke="#00cc00" stroke-width="2" rx="4"/>
+  <text x="320" y="515" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#00ff00" text-anchor="middle">
+    Coalesced Access Benefits
+  </text>
+  <text x="320" y="535" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+    ✓ Maximum memory bandwidth utilization
+  </text>
+  <text x="320" y="553" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+    ✓ Minimal memory transactions (1-2 per wavefront)
+  </text>
+  <text x="320" y="571" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+    ✓ Optimal performance: 5.3 TB/s on MI300X
+  </text>
+
+  <!-- Bad side -->
+  <rect x="590" y="490" width="540" height="95" fill="#220000" stroke="#cc0000" stroke-width="2" rx="4"/>
+  <text x="860" y="515" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ff4444" text-anchor="middle">
+    Uncoalesced Access Penalties
+  </text>
+  <text x="860" y="535" font-family="Arial, sans-serif" font-size="11" fill="#ffaaaa" text-anchor="middle">
+    ✗ Wasted bandwidth (only use small portion of cache line)
+  </text>
+  <text x="860" y="553" font-family="Arial, sans-serif" font-size="11" fill="#ffaaaa" text-anchor="middle">
+    ✗ Many transactions (up to 64 for completely random access)
+  </text>
+  <text x="860" y="571" font-family="Arial, sans-serif" font-size="11" fill="#ffaaaa" text-anchor="middle">
+    ✗ 10-30× bandwidth reduction vs coalesced
+  </text>
+
+  <!-- Best Practices -->
+  <rect x="50" y="620" width="1100" height="150" fill="#1a2a3a" stroke="#4a7aaa" stroke-width="2" rx="8"/>
+  <text x="600" y="650" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Best Practices for Memory Coalescing
+  </text>
+
+  <text x="70" y="680" font-family="Arial, sans-serif" font-size="12" fill="#aaccee">
+    1. <tspan font-weight="bold">Sequential Access:</tspan> Have consecutive threads access consecutive memory addresses
+  </text>
+  <text x="70" y="705" font-family="Arial, sans-serif" font-size="12" fill="#aaccee">
+    2. <tspan font-weight="bold">Array of Structures (AoS) → Structure of Arrays (SoA):</tspan> Reorganize data layout for better coalescing
+  </text>
+  <text x="70" y="730" font-family="Arial, sans-serif" font-size="12" fill="#aaccee">
+    3. <tspan font-weight="bold">Avoid Large Strides:</tspan> Minimize gaps between thread accesses (e.g., avoid stride &gt; 128 bytes)
+  </text>
+  <text x="70" y="755" font-family="Arial, sans-serif" font-size="12" fill="#aaccee">
+    4. <tspan font-weight="bold">Align to Cache Lines:</tspan> Start addresses should be 128-byte aligned for optimal coalescing
+  </text>
+
+  <!-- Footer -->
+  <text x="600" y="795" font-family="Arial, sans-serif" font-size="9" fill="#666666" text-anchor="middle">
+    Memory coalescing is critical for GPU performance | Cache line size: 128 bytes | HBM bandwidth: 5.3 TB/s (MI300X)
+  </text>
+</svg>

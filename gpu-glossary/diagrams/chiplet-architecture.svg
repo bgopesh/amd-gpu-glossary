@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 950" style="background-color: #1a1a1a;">
+  <defs>
+    <linearGradient id="xcdChipGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3a5a8a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a4a7a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ifChipGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#c8102e;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#e84e1b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c8102e;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="hbmChipGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a8a4a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3a7a3a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="550" y="35" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Chiplet Architecture - MI300X GPU Package
+  </text>
+  <text x="550" y="58" font-family="Arial, sans-serif" font-size="14" fill="#cccccc" text-anchor="middle">
+    8 XCD Chiplets + 8 HBM3 Stacks Connected via Infinity Fabric
+  </text>
+
+  <!-- Main Package Border -->
+  <rect x="50" y="80" width="1000" height="790" fill="none" stroke="#c8102e" stroke-width="4" rx="10"/>
+  <text x="550" y="105" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#c8102e" text-anchor="middle">
+    MI300X GPU Package (Multi-Chiplet Design)
+  </text>
+
+  <!-- Top Row: XCD 0-3 -->
+  <g id="top-xcds">
+    <!-- XCD 0 -->
+    <rect x="80" y="130" width="220" height="140" fill="url(#xcdChipGrad)" stroke="#4a7aaa" stroke-width="3" rx="6"/>
+    <text x="190" y="160" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      XCD 0
+    </text>
+    <text x="190" y="182" font-family="Arial, sans-serif" font-size="12" fill="#ccddff" text-anchor="middle">
+      38 Compute Units
+    </text>
+    <text x="190" y="200" font-family="Arial, sans-serif" font-size="10" fill="#aaccee" text-anchor="middle">
+      4 SIMD/CU × 38 CUs
+    </text>
+    <text x="190" y="218" font-family="Arial, sans-serif" font-size="10" fill="#aaccee" text-anchor="middle">
+      L2: 4 MB
+    </text>
+    <text x="190" y="236" font-family="Arial, sans-serif" font-size="10" fill="#aaccee" text-anchor="middle">
+      Matrix Cores
+    </text>
+    <text x="190" y="254" font-family="Arial, sans-serif" font-size="9" fill="#88aacc" text-anchor="middle">
+      5nm Process
+    </text>
+
+    <!-- XCD 1 -->
+    <rect x="320" y="130" width="220" height="140" fill="url(#xcdChipGrad)" stroke="#4a7aaa" stroke-width="3" rx="6"/>
+    <text x="430" y="160" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      XCD 1
+    </text>
+    <text x="430" y="182" font-family="Arial, sans-serif" font-size="12" fill="#ccddff" text-anchor="middle">
+      38 Compute Units
+    </text>
+    <text x="430" y="218" font-family="Arial, sans-serif" font-size="10" fill="#aaccee" text-anchor="middle">
+      L2: 4 MB
+    </text>
+
+    <!-- XCD 2 -->
+    <rect x="560" y="130" width="220" height="140" fill="url(#xcdChipGrad)" stroke="#4a7aaa" stroke-width="3" rx="6"/>
+    <text x="670" y="160" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      XCD 2
+    </text>
+    <text x="670" y="182" font-family="Arial, sans-serif" font-size="12" fill="#ccddff" text-anchor="middle">
+      38 Compute Units
+    </text>
+    <text x="670" y="218" font-family="Arial, sans-serif" font-size="10" fill="#aaccee" text-anchor="middle">
+      L2: 4 MB
+    </text>
+
+    <!-- XCD 3 -->
+    <rect x="800" y="130" width="220" height="140" fill="url(#xcdChipGrad)" stroke="#4a7aaa" stroke-width="3" rx="6"/>
+    <text x="910" y="160" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      XCD 3
+    </text>
+    <text x="910" y="182" font-family="Arial, sans-serif" font-size="12" fill="#ccddff" text-anchor="middle">
+      38 Compute Units
+    </text>
+    <text x="910" y="218" font-family="Arial, sans-serif" font-size="10" fill="#aaccee" text-anchor="middle">
+      L2: 4 MB
+    </text>
+  </g>
+
+  <!-- Connection lines from top XCDs to Infinity Fabric -->
+  <line x1="190" y1="270" x2="190" y2="310" stroke="#c8102e" stroke-width="3"/>
+  <line x1="430" y1="270" x2="430" y2="310" stroke="#c8102e" stroke-width="3"/>
+  <line x1="670" y1="270" x2="670" y2="310" stroke="#c8102e" stroke-width="3"/>
+  <line x1="910" y1="270" x2="910" y2="310" stroke="#c8102e" stroke-width="3"/>
+
+  <!-- Infinity Fabric Network (Central) -->
+  <rect x="100" y="310" width="900" height="100" fill="url(#ifChipGrad)" stroke="#e84e1b" stroke-width="4" rx="8"/>
+  <text x="550" y="340" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Infinity Fabric Network
+  </text>
+  <text x="550" y="363" font-family="Arial, sans-serif" font-size="14" fill="#ffcccc" text-anchor="middle">
+    L3 Cache: 256 MB (Infinity Cache)
+  </text>
+  <text x="550" y="383" font-family="Arial, sans-serif" font-size="11" fill="#ffdddd" text-anchor="middle">
+    High-bandwidth interconnect connecting all XCDs and HBM stacks
+  </text>
+  <text x="550" y="398" font-family="Arial, sans-serif" font-size="10" fill="#ffdddd" text-anchor="middle">
+    Cache coherency + Command routing + Memory controllers
+  </text>
+
+  <!-- Connection lines from Infinity Fabric to bottom XCDs -->
+  <line x1="190" y1="410" x2="190" y2="450" stroke="#c8102e" stroke-width="3"/>
+  <line x1="430" y1="410" x2="430" y2="450" stroke="#c8102e" stroke-width="3"/>
+  <line x1="670" y1="410" x2="670" y2="450" stroke="#c8102e" stroke-width="3"/>
+  <line x1="910" y1="410" x2="910" y2="450" stroke="#c8102e" stroke-width="3"/>
+
+  <!-- Bottom Row: XCD 4-7 -->
+  <g id="bottom-xcds">
+    <!-- XCD 4 -->
+    <rect x="80" y="450" width="220" height="140" fill="url(#xcdChipGrad)" stroke="#4a7aaa" stroke-width="3" rx="6"/>
+    <text x="190" y="480" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      XCD 4
+    </text>
+    <text x="190" y="502" font-family="Arial, sans-serif" font-size="12" fill="#ccddff" text-anchor="middle">
+      38 Compute Units
+    </text>
+    <text x="190" y="538" font-family="Arial, sans-serif" font-size="10" fill="#aaccee" text-anchor="middle">
+      L2: 4 MB
+    </text>
+
+    <!-- XCD 5 -->
+    <rect x="320" y="450" width="220" height="140" fill="url(#xcdChipGrad)" stroke="#4a7aaa" stroke-width="3" rx="6"/>
+    <text x="430" y="480" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      XCD 5
+    </text>
+    <text x="430" y="502" font-family="Arial, sans-serif" font-size="12" fill="#ccddff" text-anchor="middle">
+      38 Compute Units
+    </text>
+    <text x="430" y="538" font-family="Arial, sans-serif" font-size="10" fill="#aaccee" text-anchor="middle">
+      L2: 4 MB
+    </text>
+
+    <!-- XCD 6 -->
+    <rect x="560" y="450" width="220" height="140" fill="url(#xcdChipGrad)" stroke="#4a7aaa" stroke-width="3" rx="6"/>
+    <text x="670" y="480" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      XCD 6
+    </text>
+    <text x="670" y="502" font-family="Arial, sans-serif" font-size="12" fill="#ccddff" text-anchor="middle">
+      38 Compute Units
+    </text>
+    <text x="670" y="538" font-family="Arial, sans-serif" font-size="10" fill="#aaccee" text-anchor="middle">
+      L2: 4 MB
+    </text>
+
+    <!-- XCD 7 -->
+    <rect x="800" y="450" width="220" height="140" fill="url(#xcdChipGrad)" stroke="#4a7aaa" stroke-width="3" rx="6"/>
+    <text x="910" y="480" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      XCD 7
+    </text>
+    <text x="910" y="502" font-family="Arial, sans-serif" font-size="12" fill="#ccddff" text-anchor="middle">
+      38 Compute Units
+    </text>
+    <text x="910" y="538" font-family="Arial, sans-serif" font-size="10" fill="#aaccee" text-anchor="middle">
+      L2: 4 MB
+    </text>
+  </g>
+
+  <!-- Connection lines from XCDs to HBM -->
+  <line x1="190" y1="590" x2="190" y2="630" stroke="#4a8a4a" stroke-width="2"/>
+  <line x1="430" y1="590" x2="430" y2="630" stroke="#4a8a4a" stroke-width="2"/>
+  <line x1="670" y1="590" x2="670" y2="630" stroke="#4a8a4a" stroke-width="2"/>
+  <line x1="910" y1="590" x2="910" y2="630" stroke="#4a8a4a" stroke-width="2"/>
+
+  <!-- HBM3 Memory Stacks (Top Row) -->
+  <g id="hbm-top">
+    <!-- HBM Stack 0 -->
+    <rect x="80" y="630" width="100" height="90" fill="url(#hbmChipGrad)" stroke="#6aaa6a" stroke-width="3" rx="5"/>
+    <text x="130" y="660" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      HBM3
+    </text>
+    <text x="130" y="678" font-family="Arial, sans-serif" font-size="11" fill="#ccffcc" text-anchor="middle">
+      Stack 0
+    </text>
+    <text x="130" y="695" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+      24 GB
+    </text>
+    <text x="130" y="710" font-family="Arial, sans-serif" font-size="8" fill="#88dd88" text-anchor="middle">
+      663 GB/s
+    </text>
+
+    <!-- HBM Stack 1 -->
+    <rect x="200" y="630" width="100" height="90" fill="url(#hbmChipGrad)" stroke="#6aaa6a" stroke-width="3" rx="5"/>
+    <text x="250" y="660" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      HBM3
+    </text>
+    <text x="250" y="678" font-family="Arial, sans-serif" font-size="11" fill="#ccffcc" text-anchor="middle">
+      Stack 1
+    </text>
+    <text x="250" y="695" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+      24 GB
+    </text>
+
+    <!-- HBM Stack 2 -->
+    <rect x="320" y="630" width="100" height="90" fill="url(#hbmChipGrad)" stroke="#6aaa6a" stroke-width="3" rx="5"/>
+    <text x="370" y="660" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      HBM3
+    </text>
+    <text x="370" y="678" font-family="Arial, sans-serif" font-size="11" fill="#ccffcc" text-anchor="middle">
+      Stack 2
+    </text>
+    <text x="370" y="695" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+      24 GB
+    </text>
+
+    <!-- HBM Stack 3 -->
+    <rect x="440" y="630" width="100" height="90" fill="url(#hbmChipGrad)" stroke="#6aaa6a" stroke-width="3" rx="5"/>
+    <text x="490" y="660" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      HBM3
+    </text>
+    <text x="490" y="678" font-family="Arial, sans-serif" font-size="11" fill="#ccffcc" text-anchor="middle">
+      Stack 3
+    </text>
+    <text x="490" y="695" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+      24 GB
+    </text>
+
+    <!-- HBM Stack 4 -->
+    <rect x="560" y="630" width="100" height="90" fill="url(#hbmChipGrad)" stroke="#6aaa6a" stroke-width="3" rx="5"/>
+    <text x="610" y="660" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      HBM3
+    </text>
+    <text x="610" y="678" font-family="Arial, sans-serif" font-size="11" fill="#ccffcc" text-anchor="middle">
+      Stack 4
+    </text>
+    <text x="610" y="695" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+      24 GB
+    </text>
+
+    <!-- HBM Stack 5 -->
+    <rect x="680" y="630" width="100" height="90" fill="url(#hbmChipGrad)" stroke="#6aaa6a" stroke-width="3" rx="5"/>
+    <text x="730" y="660" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      HBM3
+    </text>
+    <text x="730" y="678" font-family="Arial, sans-serif" font-size="11" fill="#ccffcc" text-anchor="middle">
+      Stack 5
+    </text>
+    <text x="730" y="695" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+      24 GB
+    </text>
+
+    <!-- HBM Stack 6 -->
+    <rect x="800" y="630" width="100" height="90" fill="url(#hbmChipGrad)" stroke="#6aaa6a" stroke-width="3" rx="5"/>
+    <text x="850" y="660" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      HBM3
+    </text>
+    <text x="850" y="678" font-family="Arial, sans-serif" font-size="11" fill="#ccffcc" text-anchor="middle">
+      Stack 6
+    </text>
+    <text x="850" y="695" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+      24 GB
+    </text>
+
+    <!-- HBM Stack 7 -->
+    <rect x="920" y="630" width="100" height="90" fill="url(#hbmChipGrad)" stroke="#6aaa6a" stroke-width="3" rx="5"/>
+    <text x="970" y="660" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      HBM3
+    </text>
+    <text x="970" y="678" font-family="Arial, sans-serif" font-size="11" fill="#ccffcc" text-anchor="middle">
+      Stack 7
+    </text>
+    <text x="970" y="695" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+      24 GB
+    </text>
+  </g>
+
+  <!-- Summary Box -->
+  <rect x="80" y="745" width="940" height="105" fill="#2a2a3a" stroke="#c8102e" stroke-width="3" rx="8"/>
+  <text x="550" y="775" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#c8102e" text-anchor="middle">
+    Chiplet Architecture Benefits
+  </text>
+  <text x="100" y="800" font-family="Arial, sans-serif" font-size="11" fill="#aaccee">
+    ✓ <tspan font-weight="bold">Better Yield:</tspan> Smaller dies = fewer defects per chiplet
+  </text>
+  <text x="100" y="818" font-family="Arial, sans-serif" font-size="11" fill="#aaccee">
+    ✓ <tspan font-weight="bold">Modularity:</tspan> Mix process nodes (5nm XCDs + 6nm I/O)
+  </text>
+  <text x="100" y="836" font-family="Arial, sans-serif" font-size="11" fill="#aaccee">
+    ✓ <tspan font-weight="bold">Scalability:</tspan> Easy to scale from 1-8 XCDs per package
+  </text>
+
+  <text x="600" y="800" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa">
+    Total: <tspan font-weight="bold">304 CUs</tspan> (38 × 8 XCDs)
+  </text>
+  <text x="600" y="818" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa">
+    Memory: <tspan font-weight="bold">192 GB HBM3</tspan> @ 5.3 TB/s
+  </text>
+  <text x="600" y="836" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa">
+    Cache: <tspan font-weight="bold">256 MB L3</tspan> + 32 MB L2
+  </text>
+
+  <!-- Footer -->
+  <text x="550" y="945" font-family="Arial, sans-serif" font-size="9" fill="#666666" text-anchor="middle">
+    AMD MI300X Multi-Chiplet Package | CDNA 3 Architecture | 8 XCDs + 8 HBM3 + Infinity Fabric
+  </text>
+</svg>

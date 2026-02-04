@@ -8,6 +8,11 @@ The AMD Instinct MI300X represents the pinnacle of AMD's CDNA 3 architecture, fe
 
 ### Architecture Overview
 
+![MI300X GPU Architecture](diagrams/mi300x-architecture.svg)
+
+<details>
+<summary>View ASCII diagram</summary>
+
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────────────────┐
 │                                    AMD MI300X GPU Package                                            │
@@ -102,6 +107,8 @@ The AMD Instinct MI300X represents the pinnacle of AMD's CDNA 3 architecture, fe
 └─────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
+</details>
+
 ### Key Features
 
 **Multi-Chiplet Design:**
@@ -149,6 +156,11 @@ This architecture represents AMD's most powerful GPU for AI and HPC workloads, c
 
 The fundamental building block of AMD GPU architecture. A Compute Unit contains SIMD units, vector and scalar ALUs, local data share (LDS) memory, L1 cache, and scheduling hardware. Analogous to NVIDIA's Streaming Multiprocessor (SM).
 
+![Compute Unit Structure](diagrams/compute-unit-structure.svg)
+
+<details>
+<summary>View ASCII diagram</summary>
+
 ```
 ┌─────────────────────────────────────────────┐
 │         Compute Unit (CU)                   │
@@ -184,6 +196,8 @@ The fundamental building block of AMD GPU architecture. A Compute Unit contains 
 │  └──────────────────────────────────────┘  │
 └─────────────────────────────────────────────┘
 ```
+
+</details>
 
 **Key characteristics:**
 - Executes wavefronts (64 work-items each)
@@ -258,6 +272,11 @@ Specialized hardware accelerators for matrix multiplication operations, crucial 
 
 The compute chiplet design used in CDNA 3 architecture (MI300 series). Each XCD contains compute units, cache, and command processors.
 
+![XCD Structure](diagrams/xcd-structure.svg)
+
+<details>
+<summary>View ASCII diagram</summary>
+
 ```
 ┌─────────────────────────────────────────────────┐
 │              XCD (Accelerator Complex Die)      │
@@ -287,6 +306,8 @@ The compute chiplet design used in CDNA 3 architecture (MI300 series). Each XCD 
 │         ↕ Infinity Fabric Links ↕              │
 └─────────────────────────────────────────────────┘
 ```
+
+</details>
 
 **Key characteristics:**
 - Contains 40 Compute Units (38 active, 2 disabled for yield management)
@@ -500,6 +521,11 @@ Specialized vector registers for accumulating results in matrix operations, intr
 
 The multi-level structure of memory in AMD GPUs, from fastest/smallest to slowest/largest:
 
+![Memory Hierarchy](diagrams/memory-hierarchy.svg)
+
+<details>
+<summary>View ASCII diagram</summary>
+
 ```
                     Speed        Size         Scope
                     ─────────────────────────────────
@@ -535,6 +561,8 @@ The multi-level structure of memory in AMD GPUs, from fastest/smallest to slowes
 └──────────────┘    Slowest      Largest      All devices
 ```
 
+</details>
+
 1. **Registers** (VGPRs/SGPRs) - Sub-nanosecond latency
    - CDNA 3: 512 KB VGPR + 12.5 KB SGPR per CU
    - CDNA 2: 512 KB VGPR + AccVGPR per CU
@@ -564,6 +592,11 @@ The multi-level structure of memory in AMD GPUs, from fastest/smallest to slowes
 ## Chiplet Architecture
 
 Modern AMD GPU design approach using multiple smaller dies (chiplets) connected together instead of one monolithic die.
+
+![Chiplet Architecture](diagrams/chiplet-architecture.svg)
+
+<details>
+<summary>View ASCII diagram</summary>
 
 ```
         MI300X GPU Package (8 XCDs)
@@ -595,6 +628,8 @@ Modern AMD GPU design approach using multiple smaller dies (chiplets) connected 
 │  Total: 304 CUs, 192 GB HBM3, 256 MB L3    │
 └─────────────────────────────────────────────┘
 ```
+
+</details>
 
 **Benefits:**
 - Better manufacturing yield (smaller dies = fewer defects)

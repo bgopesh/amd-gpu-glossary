@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 650" style="background-color: #1a1a1a;">
+  <defs>
+    <linearGradient id="waveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a7acc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a5aac;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="instrGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#c8102e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e84e1b;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="550" y="35" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Wavefront Execution Model
+  </text>
+  <text x="550" y="58" font-family="Arial, sans-serif" font-size="14" fill="#cccccc" text-anchor="middle">
+    64 Work-Items (Threads) Executing in Lockstep (SIMT)
+  </text>
+
+  <!-- Instruction Broadcast -->
+  <rect x="50" y="90" width="1000" height="50" fill="url(#instrGrad)" stroke="#e84e1b" stroke-width="3" rx="6"/>
+  <text x="550" y="120" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Single Instruction Broadcast to All 64 Lanes
+  </text>
+  <text x="550" y="138" font-family="Arial, sans-serif" font-size="11" fill="#ffcccc" text-anchor="middle">
+    e.g., ADD v0, v1, v2  (executed on all 64 work-items simultaneously)
+  </text>
+
+  <!-- Arrows from instruction to lanes -->
+  <defs>
+    <marker id="arrowRed" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L8,4 z" fill="#c8102e" />
+    </marker>
+  </defs>
+  <line x1="150" y1="140" x2="150" y2="180" stroke="#c8102e" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <line x1="350" y1="140" x2="350" y2="180" stroke="#c8102e" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <line x1="550" y1="140" x2="550" y2="180" stroke="#c8102e" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <line x1="750" y1="140" x2="750" y2="180" stroke="#c8102e" stroke-width="2" marker-end="url(#arrowRed)"/>
+  <line x1="950" y1="140" x2="950" y2="180" stroke="#c8102e" stroke-width="2" marker-end="url(#arrowRed)"/>
+
+  <!-- 64 Lanes (Work-Items) -->
+  <g id="lanes">
+    <text x="50" y="205" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff">
+      64 Lanes (Work-Items / Threads):
+    </text>
+
+    <!-- Lane 0-7 -->
+    <rect x="50" y="220" width="120" height="90" fill="url(#waveGrad)" stroke="#4a8acc" stroke-width="2" rx="4"/>
+    <text x="110" y="238" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">Lanes 0-7</text>
+    <text x="110" y="255" font-family="Arial, sans-serif" font-size="9" fill="#ccddff" text-anchor="middle">Work-item 0</text>
+    <text x="110" y="268" font-family="Arial, sans-serif" font-size="9" fill="#ccddff" text-anchor="middle">Work-item 1</text>
+    <text x="110" y="281" font-family="Arial, sans-serif" font-size="9" fill="#ccddff" text-anchor="middle">...</text>
+    <text x="110" y="294" font-family="Arial, sans-serif" font-size="9" fill="#ccddff" text-anchor="middle">Work-item 7</text>
+
+    <!-- Lane 8-15 -->
+    <rect x="180" y="220" width="120" height="90" fill="url(#waveGrad)" stroke="#4a8acc" stroke-width="2" rx="4"/>
+    <text x="240" y="238" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">Lanes 8-15</text>
+    <text x="240" y="265" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">Work-items</text>
+    <text x="240" y="280" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">8-15</text>
+
+    <!-- Lane 16-23 -->
+    <rect x="310" y="220" width="120" height="90" fill="url(#waveGrad)" stroke="#4a8acc" stroke-width="2" rx="4"/>
+    <text x="370" y="238" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">Lanes 16-23</text>
+    <text x="370" y="265" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">Work-items</text>
+    <text x="370" y="280" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">16-23</text>
+
+    <!-- Lane 24-31 -->
+    <rect x="440" y="220" width="120" height="90" fill="url(#waveGrad)" stroke="#4a8acc" stroke-width="2" rx="4"/>
+    <text x="500" y="238" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">Lanes 24-31</text>
+    <text x="500" y="265" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">Work-items</text>
+    <text x="500" y="280" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">24-31</text>
+
+    <!-- ... -->
+    <text x="600" y="265" font-family="Arial, sans-serif" font-size="20" fill="#666666" text-anchor="middle">...</text>
+
+    <!-- Lane 56-63 -->
+    <rect x="660" y="220" width="120" height="90" fill="url(#waveGrad)" stroke="#4a8acc" stroke-width="2" rx="4"/>
+    <text x="720" y="238" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">Lanes 56-63</text>
+    <text x="720" y="265" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">Work-items</text>
+    <text x="720" y="280" font-family="Arial, sans-serif" font-size="9" fill="#aaccee" text-anchor="middle">56-63</text>
+  </g>
+
+  <!-- Register Usage -->
+  <rect x="50" y="330" width="370" height="120" fill="#2a4a3a" stroke="#5a8a6a" stroke-width="2" rx="4"/>
+  <text x="235" y="355" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Scalar Registers (SGPRs)
+  </text>
+  <text x="235" y="375" font-family="Arial, sans-serif" font-size="11" fill="#aaffaa" text-anchor="middle">
+    Shared by all 64 lanes
+  </text>
+  <text x="235" y="395" font-family="Arial, sans-serif" font-size="10" fill="#88dd88">
+    • Loop counters, constants
+  </text>
+  <text x="235" y="413" font-family="Arial, sans-serif" font-size="10" fill="#88dd88">
+    • Branch conditions
+  </text>
+  <text x="235" y="431" font-family="Arial, sans-serif" font-size="10" fill="#88dd88">
+    • Addresses (same for all lanes)
+  </text>
+
+  <rect x="440" y="330" width="370" height="120" fill="#4a3a5a" stroke="#8a6a9a" stroke-width="2" rx="4"/>
+  <text x="625" y="355" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Vector Registers (VGPRs)
+  </text>
+  <text x="625" y="375" font-family="Arial, sans-serif" font-size="11" fill="#ddaaff" text-anchor="middle">
+    Per-thread (64 copies)
+  </text>
+  <text x="625" y="395" font-family="Arial, sans-serif" font-size="10" fill="#ccaaee">
+    • Each lane has own VGPR value
+  </text>
+  <text x="625" y="413" font-family="Arial, sans-serif" font-size="10" fill="#ccaaee">
+    • Thread-specific data
+  </text>
+  <text x="625" y="431" font-family="Arial, sans-serif" font-size="10" fill="#ccaaee">
+    • 256 VGPRs × 64 lanes/wavefront
+  </text>
+
+  <!-- Execution Mask (for divergence) -->
+  <rect x="840" y="330" width="210" height="120" fill="#5a3a2a" stroke="#9a7a5a" stroke-width="2" rx="4"/>
+  <text x="945" y="355" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Execution Mask
+  </text>
+  <text x="945" y="378" font-family="Arial, sans-serif" font-size="10" fill="#ffddaa" text-anchor="middle">
+    64-bit mask
+  </text>
+  <text x="945" y="395" font-family="Arial, sans-serif" font-size="9" fill="#ffccaa">
+    Handles divergence:
+  </text>
+  <text x="945" y="410" font-family="Arial, sans-serif" font-size="9" fill="#ffccaa">
+    if (condition) {...}
+  </text>
+  <text x="945" y="425" font-family="Arial, sans-serif" font-size="9" fill="#ffccaa">
+    Some lanes active,
+  </text>
+  <text x="945" y="440" font-family="Arial, sans-serif" font-size="9" fill="#ffccaa">
+    others masked off
+  </text>
+
+  <!-- Comparison Box -->
+  <rect x="50" y="480" width="1000" height="140" fill="#2a2a3a" stroke="#c8102e" stroke-width="2" rx="6"/>
+  <text x="550" y="510" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#c8102e" text-anchor="middle">
+    AMD vs NVIDIA Comparison
+  </text>
+
+  <rect x="70" y="525" width="460" height="80" fill="#1a2a4a" stroke="#4a7acc" stroke-width="2" rx="4"/>
+  <text x="300" y="550" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#4a8acc" text-anchor="middle">
+    AMD Wavefront
+  </text>
+  <text x="300" y="570" font-family="Arial, sans-serif" font-size="11" fill="#aaccee" text-anchor="middle">
+    • 64 work-items (lanes)
+  </text>
+  <text x="300" y="588" font-family="Arial, sans-serif" font-size="11" fill="#aaccee" text-anchor="middle">
+    • Execute same instruction in lockstep
+  </text>
+
+  <rect x="570" y="525" width="460" height="80" fill="#1a4a2a" stroke="#4acc7a" stroke-width="2" rx="4"/>
+  <text x="800" y="550" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#4acc8a" text-anchor="middle">
+    NVIDIA Warp
+  </text>
+  <text x="800" y="570" font-family="Arial, sans-serif" font-size="11" fill="#aaeeca" text-anchor="middle">
+    • 32 threads
+  </text>
+  <text x="800" y="588" font-family="Arial, sans-serif" font-size="11" fill="#aaeeca" text-anchor="middle">
+    • Execute same instruction in lockstep
+  </text>
+
+  <!-- Footer -->
+  <text x="550" y="645" font-family="Arial, sans-serif" font-size="9" fill="#666666" text-anchor="middle">
+    Single Instruction Multiple Thread (SIMT) Execution | Up to 40 wavefronts can be active per CU
+  </text>
+</svg>

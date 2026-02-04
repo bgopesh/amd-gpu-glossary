@@ -44,7 +44,14 @@ Start the web server:
 npm start
 ```
 
-The glossary will be available at **http://localhost:3000**
+The server will start on port 8080 by default. You can access it at:
+- **Local:** http://localhost:8080
+- **Network:** The server will display your network IP address when it starts
+
+To use a different port, set the PORT environment variable:
+```bash
+PORT=3000 npm start
+```
 
 ### Features
 

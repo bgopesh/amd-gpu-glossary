@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 800" style="background-color: #1a1a1a;">
+  <defs>
+    <linearGradient id="wgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a6a8a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2a4a6a;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cuGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#5a4a7a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3a2a5a;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="550" y="35" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Kernel Grid Structure
+  </text>
+  <text x="550" y="58" font-family="Arial, sans-serif" font-size="14" fill="#cccccc" text-anchor="middle">
+    1024 Workgroups × 256 Work-Items = 262,144 Total Threads
+  </text>
+
+  <!-- Grid of Workgroups (showing sample) -->
+  <g id="workgroup-grid">
+    <text x="80" y="100" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff">
+      Workgroup Grid (1024 total):
+    </text>
+
+    <!-- Row 0 -->
+    <rect x="80" y="120" width="55" height="55" fill="url(#wgGrad)" stroke="#5a7a9a" stroke-width="2" rx="3"/>
+    <text x="107.5" y="142" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">WG 0</text>
+    <text x="107.5" y="158" font-family="Arial, sans-serif" font-size="8" fill="#ccddff" text-anchor="middle">256</text>
+    <text x="107.5" y="168" font-family="Arial, sans-serif" font-size="8" fill="#ccddff" text-anchor="middle">threads</text>
+
+    <rect x="145" y="120" width="55" height="55" fill="url(#wgGrad)" stroke="#5a7a9a" stroke-width="2" rx="3"/>
+    <text x="172.5" y="142" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">WG 1</text>
+    <text x="172.5" y="158" font-family="Arial, sans-serif" font-size="8" fill="#ccddff" text-anchor="middle">256</text>
+    <text x="172.5" y="168" font-family="Arial, sans-serif" font-size="8" fill="#ccddff" text-anchor="middle">threads</text>
+
+    <rect x="210" y="120" width="55" height="55" fill="url(#wgGrad)" stroke="#5a7a9a" stroke-width="2" rx="3"/>
+    <text x="237.5" y="150" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">WG 2</text>
+
+    <rect x="275" y="120" width="55" height="55" fill="url(#wgGrad)" stroke="#5a7a9a" stroke-width="2" rx="3"/>
+    <text x="302.5" y="150" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">WG 3</text>
+
+    <text x="355" y="150" font-family="Arial, sans-serif" font-size="16" fill="#666666" text-anchor="middle">...</text>
+
+    <rect x="400" y="120" width="55" height="55" fill="url(#wgGrad)" stroke="#5a7a9a" stroke-width="2" rx="3"/>
+    <text x="427.5" y="150" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">WG 31</text>
+
+    <!-- Row 1 -->
+    <rect x="80" y="185" width="55" height="55" fill="url(#wgGrad)" stroke="#5a7a9a" stroke-width="2" rx="3"/>
+    <text x="107.5" y="215" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">WG 32</text>
+
+    <rect x="145" y="185" width="55" height="55" fill="url(#wgGrad)" stroke="#5a7a9a" stroke-width="2" rx="3"/>
+    <text x="172.5" y="215" font-family="Arial, sans-serif" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">WG 33</text>
+
+    <text x="237.5" y="215" font-family="Arial, sans-serif" font-size="16" fill="#666666" text-anchor="middle">...</text>
+
+    <!-- Vertical dots -->
+    <text x="107.5" y="270" font-family="Arial, sans-serif" font-size="20" fill="#666666" text-anchor="middle">⋮</text>
+    <text x="172.5" y="270" font-family="Arial, sans-serif" font-size="20" fill="#666666" text-anchor="middle">⋮</text>
+    <text x="237.5" y="270" font-family="Arial, sans-serif" font-size="20" fill="#666666" text-anchor="middle">⋮</text>
+
+    <!-- Last row -->
+    <rect x="80" y="295" width="55" height="55" fill="url(#wgGrad)" stroke="#5a7a9a" stroke-width="2" rx="3"/>
+    <text x="107.5" y="318" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">WG 992</text>
+
+    <text x="172.5" y="325" font-family="Arial, sans-serif" font-size="16" fill="#666666" text-anchor="middle">...</text>
+
+    <rect x="275" y="295" width="55" height="55" fill="url(#wgGrad)" stroke="#5a7a9a" stroke-width="2" rx="3"/>
+    <text x="302.5" y="318" font-family="Arial, sans-serif" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">WG 1023</text>
+  </g>
+
+  <!-- Distribution across CUs -->
+  <g id="cu-distribution">
+    <text x="550" y="115" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff">
+      Distributed across 304 Compute Units (MI300X):
+    </text>
+
+    <!-- CU 0 -->
+    <rect x="550" y="135" width="130" height="90" fill="url(#cuGrad)" stroke="#6a5a8a" stroke-width="2" rx="4"/>
+    <text x="615" y="157" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 0</text>
+    <text x="615" y="175" font-family="Arial, sans-serif" font-size="9" fill="#ccbbee" text-anchor="middle">WG 0, 304, 608...</text>
+    <rect x="560" y="185" width="30" height="30" fill="#4a3a6a" stroke="#7a6a9a" stroke-width="1" rx="2"/>
+    <text x="575" y="204" font-family="Arial, sans-serif" font-size="8" fill="#ffffff" text-anchor="middle">WG</text>
+    <rect x="595" y="185" width="30" height="30" fill="#4a3a6a" stroke="#7a6a9a" stroke-width="1" rx="2"/>
+    <text x="610" y="204" font-family="Arial, sans-serif" font-size="8" fill="#ffffff" text-anchor="middle">WG</text>
+    <rect x="630" y="185" width="30" height="30" fill="#4a3a6a" stroke="#7a6a9a" stroke-width="1" rx="2"/>
+    <text x="645" y="204" font-family="Arial, sans-serif" font-size="8" fill="#ffffff" text-anchor="middle">WG</text>
+
+    <!-- CU 1 -->
+    <rect x="695" y="135" width="130" height="90" fill="url(#cuGrad)" stroke="#6a5a8a" stroke-width="2" rx="4"/>
+    <text x="760" y="157" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 1</text>
+    <text x="760" y="175" font-family="Arial, sans-serif" font-size="9" fill="#ccbbee" text-anchor="middle">WG 1, 305, 609...</text>
+    <text x="760" y="205" font-family="Arial, sans-serif" font-size="10" fill="#aabbdd" text-anchor="middle">Multiple WGs</text>
+
+    <!-- CU 2 -->
+    <rect x="840" y="135" width="130" height="90" fill="url(#cuGrad)" stroke="#6a5a8a" stroke-width="2" rx="4"/>
+    <text x="905" y="157" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 2</text>
+    <text x="905" y="175" font-family="Arial, sans-serif" font-size="9" fill="#ccbbee" text-anchor="middle">WG 2, 306, 610...</text>
+
+    <!-- Dots -->
+    <text x="615" y="260" font-family="Arial, sans-serif" font-size="20" fill="#666666" text-anchor="middle">...</text>
+    <text x="760" y="260" font-family="Arial, sans-serif" font-size="20" fill="#666666" text-anchor="middle">...</text>
+
+    <!-- CU 303 -->
+    <rect x="550" y="285" width="130" height="90" fill="url(#cuGrad)" stroke="#6a5a8a" stroke-width="2" rx="4"/>
+    <text x="615" y="307" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">CU 303</text>
+    <text x="615" y="325" font-family="Arial, sans-serif" font-size="9" fill="#ccbbee" text-anchor="middle">WG 303, 607...</text>
+  </g>
+
+  <!-- Properties -->
+  <rect x="80" y="400" width="990" height="160" fill="#2a2a3a" stroke="#c8102e" stroke-width="3" rx="8"/>
+  <text x="575" y="430" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#c8102e" text-anchor="middle">
+    Grid Execution Properties
+  </text>
+
+  <text x="100" y="460" font-family="Arial, sans-serif" font-size="12" fill="#aaccee">
+    <tspan font-weight="bold">Total Work-Items:</tspan> 1024 workgroups × 256 threads = 262,144 threads
+  </text>
+  <text x="100" y="485" font-family="Arial, sans-serif" font-size="12" fill="#aaccee">
+    <tspan font-weight="bold">Workgroup Independence:</tspan> No synchronization between workgroups
+  </text>
+  <text x="100" y="510" font-family="Arial, sans-serif" font-size="12" fill="#aaccee">
+    <tspan font-weight="bold">Scheduling:</tspan> Hardware scheduler assigns workgroups to available CUs dynamically
+  </text>
+  <text x="100" y="535" font-family="Arial, sans-serif" font-size="12" fill="#aaccee">
+    <tspan font-weight="bold">Concurrency:</tspan> Multiple workgroups can run on same CU if resources allow
+  </text>
+
+  <!-- Execution Details -->
+  <rect x="80" y="580" width="990" height="180" fill="#1a2a3a" stroke="#4a7aaa" stroke-width="2" rx="8"/>
+  <text x="575" y="610" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Grid Dispatch Example (MI300X)
+  </text>
+
+  <rect x="100" y="630" width="300" height="110" fill="#2a3a4a" stroke="#5a7a9a" stroke-width="1" rx="4"/>
+  <text x="250" y="655" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#aaccee" text-anchor="middle">
+    GPU Configuration
+  </text>
+  <text x="120" y="677" font-family="Courier New, monospace" font-size="10" fill="#ccddee">Compute Units:  304</text>
+  <text x="120" y="695" font-family="Courier New, monospace" font-size="10" fill="#ccddee">Total Wavefronts: 12,160</text>
+  <text x="120" y="713" font-family="Courier New, monospace" font-size="10" fill="#ccddee">Max Occupancy:   40 WF/CU</text>
+  <text x="120" y="731" font-family="Courier New, monospace" font-size="10" fill="#ccddee">(40 × 304 = 12,160)</text>
+
+  <rect x="420" y="630" width="300" height="110" fill="#2a3a4a" stroke="#5a7a9a" stroke-width="1" rx="4"/>
+  <text x="570" y="655" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#aaccee" text-anchor="middle">
+    Kernel Launch
+  </text>
+  <text x="440" y="677" font-family="Courier New, monospace" font-size="10" fill="#ccddee">Grid Size:       1024 WG</text>
+  <text x="440" y="695" font-family="Courier New, monospace" font-size="10" fill="#ccddee">Workgroup Size:  256</text>
+  <text x="440" y="713" font-family="Courier New, monospace" font-size="10" fill="#ccddee">Total Threads:   262,144</text>
+  <text x="440" y="731" font-family="Courier New, monospace" font-size="10" fill="#ccddee">Total Wavefronts: 4,096</text>
+
+  <rect x="740" y="630" width="310" height="110" fill="#2a3a4a" stroke="#5a7a9a" stroke-width="1" rx="4"/>
+  <text x="895" y="655" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#aaccee" text-anchor="middle">
+    Execution
+  </text>
+  <text x="760" y="677" font-family="Courier New, monospace" font-size="10" fill="#ccddee">~3-4 WG per CU initially</text>
+  <text x="760" y="695" font-family="Courier New, monospace" font-size="10" fill="#ffccaa">WGs scheduled as CUs free</text>
+  <text x="760" y="713" font-family="Courier New, monospace" font-size="10" fill="#ccddee">Dynamic load balancing</text>
+  <text x="760" y="731" font-family="Courier New, monospace" font-size="10" fill="#aaffaa">All complete eventually</text>
+
+  <!-- Footer -->
+  <text x="575" y="795" font-family="Arial, sans-serif" font-size="9" fill="#666666" text-anchor="middle">
+    Grid = All workgroups for kernel | Workgroups execute independently | Hardware handles scheduling
+  </text>
+</svg>

@@ -43,6 +43,11 @@ kernel<<<gridDim, blockDim, sharedMem, stream>>>(args);
 
 A group of 64 work-items (threads) that execute in SIMT (Single Instruction, Multiple Thread) fashion on AMD GPUs. Analogous to NVIDIA's "warp" (32 threads).
 
+![Wavefront Execution Model](diagrams/wavefront-execution.svg)
+
+<details>
+<summary>View ASCII diagram</summary>
+
 ```
 Wavefront (64 work-items executing in lockstep)
 ┌────────────────────────────────────────────────────┐
@@ -69,6 +74,8 @@ Wavefront (64 work-items executing in lockstep)
 AMD Wavefront = 64 threads  (vs. NVIDIA Warp = 32)
 ```
 
+</details>
+
 **Key characteristics:**
 - Always 64 threads on CDNA/RDNA architectures
 - All threads in wavefront execute same instruction
@@ -92,6 +99,11 @@ A single thread of execution in the AMD programming model. Equivalent to CUDA's 
 ## Workgroup
 
 A collection of work-items that can cooperate via LDS memory and synchronization. Equivalent to CUDA's "thread block."
+
+![Workgroup Structure](diagrams/workgroup-structure.svg)
+
+<details>
+<summary>View ASCII diagram</summary>
 
 ```
 Workgroup (e.g., 256 threads = 4 wavefronts)
@@ -117,6 +129,8 @@ Workgroup size: typically 64, 128, 256, or 512
 (Must be multiple of 64 for optimal performance)
 ```
 
+</details>
+
 **Key characteristics:**
 - Execute on the same Compute Unit
 - Share LDS (Local Data Share) memory
@@ -136,6 +150,11 @@ int groupId = blockIdx.x;
 ## Grid
 
 The complete collection of workgroups launched for a kernel execution.
+
+![Kernel Grid Structure](diagrams/kernel-grid.svg)
+
+<details>
+<summary>View ASCII diagram</summary>
 
 ```
 Grid (All workgroups for a kernel launch)
@@ -163,6 +182,8 @@ e.g., <<<(1024, 1, 1), (256, 1, 1)>>>
 │        (no synchronization between WGs)         │
 └─────────────────────────────────────────────────┘
 ```
+
+</details>
 
 **Key characteristics:**
 - Can be 1D, 2D, or 3D

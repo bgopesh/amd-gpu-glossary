@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" style="background-color: #1a1a1a;">
+  <defs>
+    <marker id="arrowAxis" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L0,10 L10,5 z" fill="#ffffff" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="500" y="35" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Roofline Model Performance Analysis
+  </text>
+  <text x="500" y="58" font-family="Arial, sans-serif" font-size="14" fill="#cccccc" text-anchor="middle">
+    AMD MI300X GPU - Compute vs Memory Bound Regions
+  </text>
+
+  <!-- Axes -->
+  <line x1="100" y1="580" x2="900" y2="580" stroke="#ffffff" stroke-width="2" marker-end="url(#arrowAxis)"/>
+  <line x1="100" y1="580" x2="100" y2="100" stroke="#ffffff" stroke-width="2" marker-end="url(#arrowAxis)"/>
+
+  <!-- X-axis label -->
+  <text x="500" y="620" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Arithmetic Intensity (FLOPS / Byte)
+  </text>
+  <text x="500" y="638" font-family="Arial, sans-serif" font-size="11" fill="#aaaaaa" text-anchor="middle">
+    Operations per byte of memory traffic
+  </text>
+
+  <!-- Y-axis label -->
+  <text x="50" y="340" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#ffffff" text-anchor="middle" transform="rotate(-90, 50, 340)">
+    Performance (TFLOPS)
+  </text>
+
+  <!-- X-axis tick marks and labels -->
+  <line x1="150" y1="575" x2="150" y2="585" stroke="#ffffff" stroke-width="1"/>
+  <text x="150" y="600" font-family="Arial, sans-serif" font-size="10" fill="#cccccc" text-anchor="middle">0.1</text>
+
+  <line x1="250" y1="575" x2="250" y2="585" stroke="#ffffff" stroke-width="1"/>
+  <text x="250" y="600" font-family="Arial, sans-serif" font-size="10" fill="#cccccc" text-anchor="middle">1</text>
+
+  <line x1="400" y1="575" x2="400" y2="585" stroke="#ffffff" stroke-width="1"/>
+  <text x="400" y="600" font-family="Arial, sans-serif" font-size="10" fill="#cccccc" text-anchor="middle">10</text>
+
+  <line x1="600" y1="575" x2="600" y2="585" stroke="#ffffff" stroke-width="1"/>
+  <text x="600" y="600" font-family="Arial, sans-serif" font-size="10" fill="#cccccc" text-anchor="middle">100</text>
+
+  <line x1="800" y1="575" x2="800" y2="585" stroke="#ffffff" stroke-width="1"/>
+  <text x="800" y="600" font-family="Arial, sans-serif" font-size="10" fill="#cccccc" text-anchor="middle">1000</text>
+
+  <!-- Y-axis tick marks and labels -->
+  <line x1="95" y1="580" x2="105" y2="580" stroke="#ffffff" stroke-width="1"/>
+  <text x="85" y="585" font-family="Arial, sans-serif" font-size="10" fill="#cccccc" text-anchor="end">0</text>
+
+  <line x1="95" y1="480" x2="105" y2="480" stroke="#ffffff" stroke-width="1"/>
+  <text x="85" y="485" font-family="Arial, sans-serif" font-size="10" fill="#cccccc" text-anchor="end">200</text>
+
+  <line x1="95" y1="380" x2="105" y2="380" stroke="#ffffff" stroke-width="1"/>
+  <text x="85" y="385" font-family="Arial, sans-serif" font-size="10" fill="#cccccc" text-anchor="end">400</text>
+
+  <line x1="95" y1="280" x2="105" y2="280" stroke="#ffffff" stroke-width="1"/>
+  <text x="85" y="285" font-family="Arial, sans-serif" font-size="10" fill="#cccccc" text-anchor="end">600</text>
+
+  <line x1="95" y1="180" x2="105" y2="180" stroke="#ffffff" stroke-width="1"/>
+  <text x="85" y="185" font-family="Arial, sans-serif" font-size="10" fill="#cccccc" text-anchor="end">800</text>
+
+  <line x1="95" y1="120" x2="105" y2="120" stroke="#ffffff" stroke-width="1"/>
+  <text x="85" y="125" font-family="Arial, sans-serif" font-size="10" fill="#cccccc" text-anchor="end">1000</text>
+
+  <!-- Memory Bandwidth Roof (diagonal line) -->
+  <!-- Bandwidth = 5.3 TB/s = 5300 GB/s -->
+  <!-- At AI=1, Perf = 5.3 TFLOPS; at AI=10, Perf=53 TFLOPS, etc. -->
+  <!-- Ridge point: Peak FLOPS / Bandwidth = 1307.4 / 5.3 ≈ 247 -->
+  <line x1="100" y1="580" x2="400" y2="280" stroke="#ff8800" stroke-width="4"/>
+  <text x="220" y="460" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ff8800" transform="rotate(-45, 220, 460)">
+    Memory Bandwidth Limit
+  </text>
+  <text x="180" y="500" font-family="Arial, sans-serif" font-size="10" fill="#ffaa44" transform="rotate(-45, 180, 500)">
+    5.3 TB/s
+  </text>
+
+  <!-- Compute Roof (horizontal line) -->
+  <!-- FP16/BF16: 1307.4 TFLOPS (scales to our graph) -->
+  <line x1="400" y1="280" x2="900" y2="280" stroke="#00cc00" stroke-width="4"/>
+  <text x="650" y="270" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#00cc00">
+    Compute Limit (FP16/BF16)
+  </text>
+  <text x="650" y="290" font-family="Arial, sans-serif" font-size="10" fill="#44ff44">
+    1,307.4 TFLOPS
+  </text>
+
+  <!-- Ridge Point -->
+  <circle cx="400" cy="280" r="8" fill="#c8102e" stroke="#ffffff" stroke-width="2"/>
+  <text x="400" y="250" font-family="Arial, sans-serif" font-size="11" font-weight="bold" fill="#c8102e" text-anchor="middle">
+    Ridge Point
+  </text>
+  <text x="400" y="265" font-family="Arial, sans-serif" font-size="9" fill="#ff4444" text-anchor="middle">
+    AI ≈ 247
+  </text>
+
+  <!-- Memory-bound region -->
+  <rect x="110" y="400" width="200" height="160" fill="#220000" stroke="#ff0000" stroke-width="2" stroke-dasharray="5,5" rx="6" opacity="0.3"/>
+  <text x="210" y="480" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ff4444" text-anchor="middle">
+    MEMORY
+  </text>
+  <text x="210" y="500" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ff4444" text-anchor="middle">
+    BOUND
+  </text>
+  <text x="210" y="520" font-family="Arial, sans-serif" font-size="9" fill="#ff8888" text-anchor="middle">
+    Optimize:
+  </text>
+  <text x="210" y="535" font-family="Arial, sans-serif" font-size="9" fill="#ff8888" text-anchor="middle">
+    • Reduce memory traffic
+  </text>
+  <text x="210" y="548" font-family="Arial, sans-serif" font-size="9" fill="#ff8888" text-anchor="middle">
+    • Improve coalescing
+  </text>
+
+  <!-- Compute-bound region -->
+  <rect x="500" y="200" width="350" height="360" fill="#002200" stroke="#00ff00" stroke-width="2" stroke-dasharray="5,5" rx="6" opacity="0.3"/>
+  <text x="675" y="380" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#44ff44" text-anchor="middle">
+    COMPUTE BOUND
+  </text>
+  <text x="675" y="405" font-family="Arial, sans-serif" font-size="9" fill="#88ff88" text-anchor="middle">
+    Optimize:
+  </text>
+  <text x="675" y="420" font-family="Arial, sans-serif" font-size="9" fill="#88ff88" text-anchor="middle">
+    • Increase arithmetic intensity
+  </text>
+  <text x="675" y="433" font-family="Arial, sans-serif" font-size="9" fill="#88ff88" text-anchor="middle">
+    • Use MFMA (matrix cores)
+  </text>
+  <text x="675" y="446" font-family="Arial, sans-serif" font-size="9" fill="#88ff88" text-anchor="middle">
+    • Lower precision (FP16/BF16)
+  </text>
+
+  <!-- Example workloads -->
+  <!-- Memory-bound: Vector add (AI ~ 0.25) -->
+  <circle cx="180" cy="520" r="6" fill="#ff0000"/>
+  <text x="195" y="523" font-family="Arial, sans-serif" font-size="9" fill="#ffffff">Vector Add</text>
+
+  <!-- Moderate: GEMM without optimization (AI ~ 10) -->
+  <circle cx="400" cy="410" r="6" fill="#ffaa00"/>
+  <text x="415" y="413" font-family="Arial, sans-serif" font-size="9" fill="#ffffff">Basic GEMM</text>
+
+  <!-- Compute-bound: Optimized GEMM (AI ~ 500) -->
+  <circle cx="650" cy="275" r="6" fill="#00ff00"/>
+  <text x="665" y="278" font-family="Arial, sans-serif" font-size="9" fill="#ffffff">Optimized GEMM</text>
+
+  <!-- Info box -->
+  <rect x="100" y="650" width="800" height="45" fill="#2a2a3a" stroke="#4a6a8a" stroke-width="1" rx="4"/>
+  <text x="500" y="672" font-family="Arial, sans-serif" font-size="11" fill="#aaccee" text-anchor="middle">
+    <tspan font-weight="bold">Ridge Point = Peak FLOPS / Memory Bandwidth</tspan> = 1307.4 TFLOPS / 5.3 TB/s ≈ 247 FLOPS/Byte
+  </text>
+  <text x="500" y="688" font-family="Arial, sans-serif" font-size="10" fill="#aaccee" text-anchor="middle">
+    Kernels with AI &lt; 247 are memory-bound | Kernels with AI &gt; 247 are compute-bound
+  </text>
+</svg>

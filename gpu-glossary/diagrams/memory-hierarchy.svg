@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1000" style="background-color: #1a1a1a;">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#c8102e" />
+    </marker>
+    <linearGradient id="regGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#00ff00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#88ff88;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ldsGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#66ff00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#99ff66;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="l1Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ffff00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffff88;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="l2Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff8800;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ffaa44;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="l3Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff4400;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff6644;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="hbmGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ff0000;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff4444;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="35" font-family="Arial, sans-serif" font-size="26" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    AMD GPU Memory Hierarchy
+  </text>
+  <text x="450" y="58" font-family="Arial, sans-serif" font-size="14" fill="#cccccc" text-anchor="middle">
+    From Fastest (Top) to Slowest (Bottom)
+  </text>
+
+  <!-- Speed/Latency Scale on Left -->
+  <text x="80" y="120" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#00ff00" text-anchor="end">FASTEST</text>
+  <text x="80" y="420" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ffaa00" text-anchor="end">FAST</text>
+  <text x="80" y="680" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ff6600" text-anchor="end">SLOW</text>
+  <text x="80" y="900" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#ff0000" text-anchor="end">SLOWEST</text>
+
+  <!-- Speed gradient bar -->
+  <defs>
+    <linearGradient id="speedGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#00ff00;stop-opacity:0.5" />
+      <stop offset="30%" style="stop-color:#ffff00;stop-opacity:0.5" />
+      <stop offset="60%" style="stop-color:#ff8800;stop-opacity:0.5" />
+      <stop offset="100%" style="stop-color:#ff0000;stop-opacity:0.5" />
+    </linearGradient>
+  </defs>
+  <rect x="90" y="100" width="10" height="820" fill="url(#speedGrad)" stroke="#666666" stroke-width="1"/>
+
+  <!-- Level 1: Registers (VGPR/SGPR) -->
+  <g id="registers">
+    <rect x="120" y="100" width="650" height="100" fill="url(#regGrad)" stroke="#00cc00" stroke-width="3" rx="6"/>
+    <text x="445" y="130" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#003300" text-anchor="middle">
+      Registers (VGPR + SGPR)
+    </text>
+    <text x="445" y="153" font-family="Arial, sans-serif" font-size="13" fill="#004400" text-anchor="middle">
+      512 KB VGPR + 12.5 KB SGPR per CU
+    </text>
+    <rect x="130" y="165" width="200" height="25" fill="#00aa00" stroke="#006600" stroke-width="1" rx="3"/>
+    <text x="230" y="182" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Latency: 1 cycle</text>
+    <rect x="340" y="165" width="200" height="25" fill="#00aa00" stroke="#006600" stroke-width="1" rx="3"/>
+    <text x="440" y="182" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Scope: Per-thread</text>
+    <rect x="550" y="165" width="210" height="25" fill="#00aa00" stroke="#006600" stroke-width="1" rx="3"/>
+    <text x="655" y="182" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Bandwidth: ~30 TB/s</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="445" y1="200" x2="445" y2="230" stroke="#c8102e" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Level 2: LDS (Local Data Share) -->
+  <g id="lds">
+    <rect x="120" y="230" width="650" height="100" fill="url(#ldsGrad)" stroke="#44cc00" stroke-width="3" rx="6"/>
+    <text x="445" y="260" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#223300" text-anchor="middle">
+      LDS (Local Data Share)
+    </text>
+    <text x="445" y="283" font-family="Arial, sans-serif" font-size="13" fill="#334400" text-anchor="middle">
+      64 KB per CU
+    </text>
+    <rect x="130" y="295" width="200" height="25" fill="#55aa00" stroke="#338800" stroke-width="1" rx="3"/>
+    <text x="230" y="312" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Latency: ~15 cycles</text>
+    <rect x="340" y="295" width="200" height="25" fill="#55aa00" stroke="#338800" stroke-width="1" rx="3"/>
+    <text x="440" y="312" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Scope: Workgroup</text>
+    <rect x="550" y="295" width="210" height="25" fill="#55aa00" stroke="#338800" stroke-width="1" rx="3"/>
+    <text x="655" y="312" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">SW-managed cache</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="445" y1="330" x2="445" y2="360" stroke="#c8102e" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Level 3: L1 Cache -->
+  <g id="l1">
+    <rect x="120" y="360" width="650" height="100" fill="url(#l1Grad)" stroke="#cccc00" stroke-width="3" rx="6"/>
+    <text x="445" y="390" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#444400" text-anchor="middle">
+      L1 Data Cache
+    </text>
+    <text x="445" y="413" font-family="Arial, sans-serif" font-size="13" fill="#555500" text-anchor="middle">
+      32 KB per CU (9.7 MB total on MI300X)
+    </text>
+    <rect x="130" y="425" width="200" height="25" fill="#aaaa00" stroke="#888800" stroke-width="1" rx="3"/>
+    <text x="230" y="442" font-family="Arial, sans-serif" font-size="11" fill="#000000" text-anchor="middle">Latency: ~40 cycles</text>
+    <rect x="340" y="425" width="200" height="25" fill="#aaaa00" stroke="#888800" stroke-width="1" rx="3"/>
+    <text x="440" y="442" font-family="Arial, sans-serif" font-size="11" fill="#000000" text-anchor="middle">Scope: Per-CU</text>
+    <rect x="550" y="425" width="210" height="25" fill="#aaaa00" stroke="#888800" stroke-width="1" rx="3"/>
+    <text x="655" y="442" font-family="Arial, sans-serif" font-size="11" fill="#000000" text-anchor="middle">128-byte cache lines</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="445" y1="460" x2="445" y2="490" stroke="#c8102e" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Level 4: L2 Cache -->
+  <g id="l2">
+    <rect x="120" y="490" width="650" height="100" fill="url(#l2Grad)" stroke="#dd8800" stroke-width="3" rx="6"/>
+    <text x="445" y="520" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#442200" text-anchor="middle">
+      L2 Cache
+    </text>
+    <text x="445" y="543" font-family="Arial, sans-serif" font-size="13" fill="#553300" text-anchor="middle">
+      32 MB total (4 MB per XCD, 8 XCDs on MI300X)
+    </text>
+    <rect x="130" y="555" width="200" height="25" fill="#bb6600" stroke="#995500" stroke-width="1" rx="3"/>
+    <text x="230" y="572" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Latency: ~150 cycles</text>
+    <rect x="340" y="555" width="200" height="25" fill="#bb6600" stroke="#995500" stroke-width="1" rx="3"/>
+    <text x="440" y="572" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Scope: Per-XCD</text>
+    <rect x="550" y="555" width="210" height="25" fill="#bb6600" stroke="#995500" stroke-width="1" rx="3"/>
+    <text x="655" y="572" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Shared by 38 CUs</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="445" y1="590" x2="445" y2="620" stroke="#c8102e" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Level 5: L3 Cache (Infinity Cache) -->
+  <g id="l3">
+    <rect x="120" y="620" width="650" height="100" fill="url(#l3Grad)" stroke="#ff6600" stroke-width="3" rx="6"/>
+    <text x="445" y="650" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#441100" text-anchor="middle">
+      L3 Cache (Infinity Cache)
+    </text>
+    <text x="445" y="673" font-family="Arial, sans-serif" font-size="13" fill="#552200" text-anchor="middle">
+      256 MB (embedded in Infinity Fabric)
+    </text>
+    <rect x="130" y="685" width="200" height="25" fill="#cc4400" stroke="#aa3300" stroke-width="1" rx="3"/>
+    <text x="230" y="702" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Latency: ~200 cycles</text>
+    <rect x="340" y="685" width="200" height="25" fill="#cc4400" stroke="#aa3300" stroke-width="1" rx="3"/>
+    <text x="440" y="702" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Scope: GPU-wide</text>
+    <rect x="550" y="685" width="210" height="25" fill="#cc4400" stroke="#aa3300" stroke-width="1" rx="3"/>
+    <text x="655" y="702" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">All XCDs share</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="445" y1="720" x2="445" y2="750" stroke="#c8102e" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- Level 6: HBM (Global Memory) -->
+  <g id="hbm">
+    <rect x="120" y="750" width="650" height="120" fill="url(#hbmGrad)" stroke="#ff0000" stroke-width="3" rx="6"/>
+    <text x="445" y="785" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#440000" text-anchor="middle">
+      HBM3 (Global Memory)
+    </text>
+    <text x="445" y="810" font-family="Arial, sans-serif" font-size="13" fill="#550000" text-anchor="middle">
+      192 GB total (8 stacks × 24 GB each on MI300X)
+    </text>
+    <rect x="130" y="825" width="155" height="30" fill="#cc0000" stroke="#990000" stroke-width="1" rx="3"/>
+    <text x="207.5" y="845" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Latency: ~350 cycles</text>
+    <rect x="295" y="825" width="155" height="30" fill="#cc0000" stroke="#990000" stroke-width="1" rx="3"/>
+    <text x="372.5" y="845" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">Scope: Global</text>
+    <rect x="460" y="825" width="155" height="30" fill="#cc0000" stroke="#990000" stroke-width="1" rx="3"/>
+    <text x="537.5" y="845" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">BW: 5.3 TB/s</text>
+    <rect x="625" y="825" width="135" height="30" fill="#cc0000" stroke="#990000" stroke-width="1" rx="3"/>
+    <text x="692.5" y="845" font-family="Arial, sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">8 HBM stacks</text>
+  </g>
+
+  <!-- Summary Box -->
+  <rect x="120" y="900" width="650" height="75" fill="#2a2a2a" stroke="#555555" stroke-width="2" rx="6"/>
+  <text x="445" y="925" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#c8102e" text-anchor="middle">
+    Memory Access Strategy
+  </text>
+  <text x="445" y="945" font-family="Arial, sans-serif" font-size="11" fill="#aaaaaa" text-anchor="middle">
+    Optimize for register reuse → Use LDS for workgroup sharing → Coalesced global access
+  </text>
+  <text x="445" y="963" font-family="Arial, sans-serif" font-size="10" fill="#888888" text-anchor="middle">
+    Cache hierarchy automatically manages data movement between levels
+  </text>
+
+  <!-- Footer -->
+  <text x="450" y="995" font-family="Arial, sans-serif" font-size="9" fill="#666666" text-anchor="middle">
+    AMD MI300X Memory Hierarchy | 350× latency difference between registers and HBM
+  </text>
+</svg>

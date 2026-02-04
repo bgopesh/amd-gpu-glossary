@@ -46,6 +46,11 @@ The computational performance of the GPU, typically measured in FLOPS (Floating 
 
 A visual performance model that shows the achievable performance as a function of arithmetic intensity.
 
+![Roofline Model Performance Analysis](diagrams/roofline-model.svg)
+
+<details>
+<summary>View ASCII diagram</summary>
+
 ```
 Performance (TFLOPS)
      ▲
@@ -72,6 +77,8 @@ FLOPS│                 ╱   (163.4 TFLOPS for MI300X FP64)
      If AI < Ridge: Memory Bound → Optimize memory access
      If AI > Ridge: Compute Bound → Optimize ALU usage
 ```
+
+</details>
 
 **Key concepts:**
 - **Arithmetic Intensity**: FLOPS per byte of memory traffic
@@ -191,6 +198,11 @@ rocprofv3 --pmc --counter SQ_WAVE_CYCLES,SQ_BUSY_CYCLES -- ./myapp
 
 Combining multiple memory accesses from a wavefront into fewer transactions.
 
+![Memory Coalescing Comparison](diagrams/memory-coalescing.svg)
+
+<details>
+<summary>View ASCII diagram</summary>
+
 ```
 Coalesced vs Uncoalesced Memory Access
 
@@ -220,6 +232,8 @@ T0    T1    T2    T3    T4   ... T63
 
 Result: 10-30x bandwidth reduction!
 ```
+
+</details>
 
 **Best practices:**
 ```cpp
