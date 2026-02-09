@@ -272,25 +272,13 @@ class GlossaryApp {
     await this.loadTerm(hash);
   }
 
-  // Show home page with AMD animation
+  // Show home page with AMD logo
   showHome() {
     this.contentArea.innerHTML = `
       <div class="welcome">
         <div class="welcome-hero">
-          <div class="amd-logo-animation">
-            <svg class="amd-logo" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
-              <g class="logo-group">
-                <!-- A -->
-                <path class="logo-letter" d="M20,60 L30,20 L40,20 L50,60 M25,45 L45,45" stroke="var(--primary-color)" stroke-width="3" fill="none"/>
-                <!-- M -->
-                <path class="logo-letter" d="M65,60 L65,20 L75,40 L85,20 L85,60" stroke="var(--primary-color)" stroke-width="3" fill="none"/>
-                <!-- D -->
-                <path class="logo-letter" d="M100,60 L100,20 L110,20 Q120,30 120,40 Q120,50 110,60 L100,60" stroke="var(--primary-color)" stroke-width="3" fill="none"/>
-              </g>
-              <circle class="pulse-circle pulse-1" cx="35" cy="40" r="5" fill="var(--primary-color)" opacity="0.3"/>
-              <circle class="pulse-circle pulse-2" cx="75" cy="30" r="5" fill="var(--primary-color)" opacity="0.3"/>
-              <circle class="pulse-circle pulse-3" cx="110" cy="40" r="5" fill="var(--primary-color)" opacity="0.3"/>
-            </svg>
+          <div class="amd-logo-container">
+            <img src="/images/amd-logo.svg" alt="AMD Logo" class="amd-official-logo" />
           </div>
           <div class="welcome-hero-content">
             <h1 class="welcome-title">AMD GPU Glossary</h1>
