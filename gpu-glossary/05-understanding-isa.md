@@ -369,25 +369,78 @@ for (int i = 0; i < 64; i++) {
 ## Tools for ISA Analysis
 
 ### 1. ROCm Compiler
+Generate ISA code and resource information:
 ```bash
+# Generate ISA (.s file)
 hipcc -c --save-temps -g kernel.cpp
-```
 
-### 2. Resource Analysis
-```bash
+# View resource usage per kernel
 hipcc -c kernel.cpp -Rpass-analysis=kernel-resource-usage
 ```
 
-### 3. ROCProfiler
-Profile actual ISA instruction counts:
+### 2. rocprofv3
+Profile instruction-level execution and collect SQ (Sequencer) counters:
+
 ```bash
-rocprof --stats kernel.out
+# Setup environment
+source /opt/rocm/share/rocprofiler-sdk/setup-env.sh
+
+# Collect instruction counts and execution metrics
+rocprofv3 --pmc SQ_INSTS_VALU,SQ_INSTS_SALU,SQ_INSTS_VMEM_RD,SQ_INSTS_VMEM_WR -- ./kernel.out
+
+# Collect detailed instruction mix
+rocprofv3 --pmc SQ_INSTS_VALU,SQ_INSTS_SALU,SQ_INSTS_FLAT,SQ_INSTS_LDS,SQ_INSTS_GDS -- ./kernel.out
+
+# Monitor ALU stalls and memory wait cycles
+rocprofv3 --pmc SQ_WAIT_INST_LDS,SQ_ACTIVE_INST_VALU,SQ_LDS_BANK_CONFLICT -- ./kernel.out
+
+# Thread trace for instruction-level timing (MI200/MI300)
+rocprofv3 --att --att-activity 8 -d isa_trace -- ./kernel.out
 ```
 
-### 4. AMD GPU Architecture Manuals
+**Key ISA-related counters:**
+- `SQ_INSTS_VALU`: Vector ALU instruction count
+- `SQ_INSTS_SALU`: Scalar ALU instruction count
+- `SQ_INSTS_VMEM_RD`: Vector memory read instructions
+- `SQ_INSTS_VMEM_WR`: Vector memory write instructions
+- `SQ_INSTS_FLAT`: FLAT instruction count
+- `SQ_INSTS_LDS`: LDS instruction count
+- `SQ_INSTS_SMEM`: Scalar memory instruction count
+- `SQ_ACTIVE_INST_VALU`: Cycles spent executing VALU instructions
+- `SQ_WAIT_INST_LDS`: Cycles waiting for LDS operations
+- `SQ_LDS_BANK_CONFLICT`: LDS bank conflict cycles
+
+**Example workflow:**
+```bash
+# 1. Compile kernel with ISA output
+hipcc -c --save-temps -g kernel.cpp
+
+# 2. Examine generated .s file
+cat kernel-hip-amdgcn-amd-amdhsa-gfx90a.s
+
+# 3. Profile instruction execution
+rocprofv3 --pmc SQ_INSTS_VALU,SQ_INSTS_VMEM_RD -- ./kernel.out
+
+# 4. For detailed instruction timing, use thread trace
+rocprofv3 --att --att-activity 8 --kernel-include-regex "my_kernel" -d trace -- ./kernel.out
+```
+
+### 3. AMD GPU Architecture Manuals
 - **CDNA2™ ISA Reference**: Detailed instruction specifications for MI200 series
 - **CDNA3™ ISA Reference**: MI300 series specifications
 - **RDNA2™/RDNA3™**: Gaming GPU architectures
+- **RDNA4™**: Latest RDNA architecture
+
+### 4. Additional Analysis Tools
+- **llvm-objdump**: Disassemble compiled kernels
+  ```bash
+  llvm-objdump -d kernel.o
+  ```
+- **rocprofiler-compute**: High-level analysis with instruction mix visualization
+  ```bash
+  rocprof-compute profile -d results -- ./kernel.out
+  rocprof-compute analyze -d results  # View instruction mix panel
+  ```
 
 ---
 
