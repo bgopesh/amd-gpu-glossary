@@ -95,7 +95,7 @@ Achievable FLOPS = min(Peak FLOPS, Bandwidth × Arithmetic Intensity)
 - Guide optimization strategy
 - Understand if kernel is compute or memory bound
 
-**Related:** [Memory Bandwidth](#memory-bandwidth), [Compute Throughput](#compute-throughput), [rocprofiler-compute](#rocprofiler-compute-omniperf)
+**Related:** [Memory Bandwidth](#memory-bandwidth), [Compute Throughput](#compute-throughput), [rocprofiler-compute](#rocprofiler-compute)
 
 ## Occupancy
 
@@ -537,7 +537,7 @@ Hardware metrics exposed by AMD GPUs for detailed performance analysis.
 
 **Access via:**
 - [rocprofiler-sdk](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-sdk) - Command-line tool and API
-- [rocprofiler-compute](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-compute) - High-level analysis (formerly Omniperf)
+- [rocprofiler-compute](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-compute) - High-level analysis
 - rocprofiler-sdk API for programmatic access
 
 ### GFX9 Performance Counters
@@ -716,7 +716,7 @@ The following performance counters are available for GFX9 architecture GPUs (Veg
 
 - **MAX_WAVE_SIZE** - Max wave size constant
 
-**Related:** [rocprofiler-sdk](#rocprofiler-sdk), [rocprofiler-compute](#rocprofiler-compute-omniperf)
+**Related:** [rocprofiler-sdk](#rocprofiler-sdk), [rocprofiler-compute](#rocprofiler-compute)
 
 ## rocprofv3
 
@@ -852,13 +852,11 @@ rocpd2pftrace -i results.db -o perfetto_trace
 - **Large output files:** Use `--minimum-output-data` to set thresholds
 - **ROCm path issues:** Use `--rocm-root` to specify custom installation
 
-**Related:** [Performance Counters](#performance-counters), [rocprofiler-sdk](#rocprofiler-sdk), [rocprofiler-compute](#rocprofiler-compute-omniperf)
+**Related:** [Performance Counters](#performance-counters), [rocprofiler-sdk](#rocprofiler-sdk), [rocprofiler-compute](#rocprofiler-compute)
 
-## rocprofiler-compute (Omniperf)
+## rocprofiler-compute
 
 A high-level system performance profiling tool for machine learning and HPC workloads running on AMD MI GPUs, providing detailed analysis and visualization of GPU performance.
-
-**Formerly known as:** Omniperf
 
 **Target GPUs:** MI100, MI200, MI300, and MI350 series accelerators
 
@@ -959,11 +957,9 @@ rocprof-compute profile -d run2 -- ./myapp_v2
 
 **Related:** [rocprofv3](#rocprofv3), [Roofline Model](#roofline-model), [Performance Counters](#performance-counters)
 
-## rocprof-sys (Omnitrace)
+## rocprof-sys
 
 A comprehensive profiling and tracing tool for parallel applications (CPU and GPU) written in C, C++, Fortran, HIP, OpenCL, and Python.
-
-**Formerly known as:** Omnitrace
 
 **Key capabilities:**
 - Full-stack profiling (CPU + GPU)
@@ -1070,7 +1066,7 @@ mpirun -n 4 rocprof-sys-run -- ./mpi_app
 
 **Documentation:** [ROCm Systems Profiler Documentation](https://rocm.docs.amd.com/projects/rocprofiler-systems/en/latest/)
 
-**Related:** [rocprofv3](#rocprofv3), [rocprofiler-compute](#rocprofiler-compute-omniperf)
+**Related:** [rocprofv3](#rocprofv3), [rocprofiler-compute](#rocprofiler-compute)
 
 ## Thread Trace (ATT)
 
@@ -1253,7 +1249,7 @@ rocprof-compute analyze -d trace_results
 - Use kernel iteration ranges for targeted profiling
 - Close other browser tabs when viewing large traces
 
-**Related:** [Thread Trace](#thread-trace-att), [rocprofv3](#rocprofv3), [rocprofiler-compute](#rocprofiler-compute-omniperf)
+**Related:** [Thread Trace](#thread-trace-att), [rocprofv3](#rocprofv3), [rocprofiler-compute](#rocprofiler-compute)
 
 ## Profiling and Analysis
 
@@ -1261,7 +1257,7 @@ The process of measuring and understanding GPU application performance.
 
 **Tools:**
 1. **[rocprofiler-sdk](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-sdk)**: Low-level profiling, hardware counters, API tracing
-2. **[rocprofiler-compute](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-compute)**: High-level analysis with web UI (formerly Omniperf)
+2. **[rocprofiler-compute](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-compute)**: High-level analysis with web UI
 3. **Manual timing**: Using HIP events
 
 **Methodology:**
@@ -1271,7 +1267,7 @@ The process of measuring and understanding GPU application performance.
 4. Optimize critical kernels
 5. Measure improvement
 
-**Related:** [rocprofiler-sdk](#rocprofiler-sdk), [rocprofiler-compute](#rocprofiler-compute-omniperf)
+**Related:** [rocprofiler-sdk](#rocprofiler-sdk), [rocprofiler-compute](#rocprofiler-compute)
 
 ## Performance Optimization Strategies
 

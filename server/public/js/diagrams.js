@@ -54,37 +54,54 @@ class DiagramRenderer {
       </div>
 
       <div class="gpu-package">
-        <div class="xcd-grid">
-          ${this.createXCD(0)}
-          ${this.createXCD(1)}
-          ${this.createXCD(2)}
-          ${this.createXCD(3)}
-        </div>
+        <div class="hbm-outer-container">
+          <div class="hbm-label-outer">HBM3 Memory - 192 GB @ 5.3 TB/s</div>
 
-        <div class="infinity-fabric-layer">
-          <div class="fabric-label">
-            <span class="fabric-icon">⚡</span>
-            Infinity Fabric Network
-            <span class="cache-info">256 MB L3 Cache</span>
-          </div>
-        </div>
+          <div class="hbm-wrapper">
+            <!-- Left HBM Stacks -->
+            <div class="hbm-column hbm-left">
+              ${Array.from({length: 4}, (_, i) => `
+                <div class="hbm-stack">
+                  <div class="hbm-stack-label">Stack ${i}</div>
+                  <div class="hbm-capacity">24 GB</div>
+                </div>
+              `).join('')}
+            </div>
 
-        <div class="xcd-grid">
-          ${this.createXCD(4)}
-          ${this.createXCD(5)}
-          ${this.createXCD(6)}
-          ${this.createXCD(7)}
-        </div>
-
-        <div class="hbm-layer">
-          <div class="hbm-label">HBM3 Memory - 192 GB @ 5.3 TB/s</div>
-          <div class="hbm-stacks">
-            ${Array.from({length: 8}, (_, i) => `
-              <div class="hbm-stack">
-                <div class="hbm-stack-label">Stack ${i}</div>
-                <div class="hbm-capacity">24 GB</div>
+            <!-- XCC Container -->
+            <div class="xcc-container">
+              <div class="xcd-grid">
+                ${this.createXCD(0)}
+                ${this.createXCD(1)}
+                ${this.createXCD(2)}
+                ${this.createXCD(3)}
               </div>
-            `).join('')}
+
+              <div class="infinity-fabric-layer">
+                <div class="fabric-label">
+                  <span class="fabric-icon">⚡</span>
+                  Infinity Fabric Network
+                  <span class="cache-info">256 MB L3 Cache</span>
+                </div>
+              </div>
+
+              <div class="xcd-grid">
+                ${this.createXCD(4)}
+                ${this.createXCD(5)}
+                ${this.createXCD(6)}
+                ${this.createXCD(7)}
+              </div>
+            </div>
+
+            <!-- Right HBM Stacks -->
+            <div class="hbm-column hbm-right">
+              ${Array.from({length: 4}, (_, i) => `
+                <div class="hbm-stack">
+                  <div class="hbm-stack-label">Stack ${i + 4}</div>
+                  <div class="hbm-capacity">24 GB</div>
+                </div>
+              `).join('')}
+            </div>
           </div>
         </div>
       </div>

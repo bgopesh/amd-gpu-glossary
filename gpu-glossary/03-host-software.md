@@ -224,11 +224,11 @@ rocprofv3 --stats -- ./myprogram
 
 **Repository:** [rocprofiler-sdk](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-sdk)
 
-**Related:** [rocprofiler-compute](#rocprofiler-compute-omniperf), [Performance Analysis](#performance-analysis)
+**Related:** [rocprofiler-compute](#rocprofiler-compute), [Performance Analysis](#performance-analysis)
 
-## rocprofiler-compute (Omniperf)
+## rocprofiler-compute
 
-High-level performance analysis tool for AMD Instinct GPUs. Previously known as Omniperf, now part of rocprofiler-compute.
+High-level performance analysis tool for AMD Instinct GPUs.
 
 **Key features:**
 - Web-based UI for analysis
@@ -241,13 +241,13 @@ High-level performance analysis tool for AMD Instinct GPUs. Previously known as 
 **Workflow:**
 ```bash
 # Profile application
-omniperf profile -n myapp -- ./myprogram
+rocprof-compute profile -n myapp -- ./myprogram
 
 # Analyze results
-omniperf analyze -p workloads/myapp
+rocprof-compute analyze -p workloads/myapp
 
 # Launch web interface
-omniperf analyze -p workloads/myapp --gui
+rocprof-compute analyze -p workloads/myapp --gui
 ```
 
 **Repository:** [rocprofiler-compute](https://github.com/ROCm/rocm-systems/tree/develop/projects/rocprofiler-compute)
