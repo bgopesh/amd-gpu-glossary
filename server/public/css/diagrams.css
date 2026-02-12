@@ -651,6 +651,292 @@
   font-weight: 500;
 }
 
+/* Kernel Dispatch Flow Diagram */
+.kernel-dispatch-diagram {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+  max-width: 1200px;
+  margin: 2rem auto;
+}
+
+.dispatch-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.flow-section {
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 0.5rem;
+}
+
+.cpu-section {
+  background: linear-gradient(135deg, rgba(66, 135, 245, 0.15), rgba(66, 135, 245, 0.05));
+  border: 2px solid rgba(66, 135, 245, 0.6);
+}
+
+.gpu-section {
+  background: linear-gradient(135deg, rgba(237, 28, 36, 0.15), rgba(237, 28, 36, 0.05));
+  border: 2px solid rgba(237, 28, 36, 0.6);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.section-header h4 {
+  margin: 0;
+  color: var(--primary-color);
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.section-icon {
+  font-size: 2rem;
+}
+
+.flow-step {
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.flow-step:hover {
+  border-color: var(--primary-color);
+  transform: translateX(5px);
+  box-shadow: 0 4px 16px rgba(237, 28, 36, 0.3);
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-title {
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.step-code {
+  font-family: 'Fira Code', monospace;
+  background: rgba(237, 28, 36, 0.1);
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  overflow-x: auto;
+}
+
+.step-details {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.flow-arrow {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--primary-color);
+  margin: 0.5rem 0;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.pcie-bridge {
+  background: linear-gradient(135deg, rgba(255, 165, 0, 0.2), rgba(255, 140, 0, 0.1));
+  border: 2px solid rgba(255, 165, 0, 0.6);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.pcie-label {
+  color: rgba(255, 165, 0, 0.9);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.pcie-arrow {
+  font-size: 2.5rem;
+  color: rgba(255, 165, 0, 0.8);
+  animation: slideDown 1.5s infinite;
+}
+
+@keyframes slideDown {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(10px); opacity: 0.5; }
+}
+
+.flow-arrow-split {
+  text-align: center;
+  margin: 1rem 0;
+}
+
+.arrow-line {
+  font-size: 2rem;
+  color: var(--primary-color);
+}
+
+.split-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+.cu-execution-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.cu-execution {
+  background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+  border: 2px solid var(--primary-color);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.cu-execution:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(237, 28, 36, 0.4);
+}
+
+.cu-header {
+  color: var(--primary-color);
+  font-weight: 700;
+  font-size: 1rem;
+  text-align: center;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cu-step {
+  margin-bottom: 0.75rem;
+}
+
+.cu-step-num {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 24px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.cu-step-title {
+  display: inline;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.cu-step-detail {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-left: 2rem;
+  margin-top: 0.25rem;
+}
+
+.resource-grid {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-left: 2rem;
+  margin-top: 0.25rem;
+}
+
+.resource {
+  background: rgba(237, 28, 36, 0.15);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.simd-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.25rem;
+  margin-left: 2rem;
+  margin-top: 0.25rem;
+}
+
+.simd-mini {
+  background: var(--primary-color);
+  color: white;
+  padding: 0.25rem;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  text-align: center;
+  font-weight: 600;
+}
+
+.memory-levels {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.mem-level {
+  background: linear-gradient(135deg, rgba(237, 28, 36, 0.2), rgba(237, 28, 36, 0.05));
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  text-align: center;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.mem-level:hover {
+  background: rgba(237, 28, 36, 0.3);
+  transform: scale(1.05);
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .hbm-wrapper {
@@ -692,6 +978,14 @@
   .level-latency {
     grid-column: 2;
     justify-self: start;
+  }
+
+  .cu-execution-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .memory-levels {
+    grid-template-columns: 1fr;
   }
 }
 

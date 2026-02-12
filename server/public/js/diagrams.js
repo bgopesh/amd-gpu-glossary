@@ -6,7 +6,8 @@ class DiagramRenderer {
       'mi300x-architecture': this.createMI300XArchitecture.bind(this),
       'compute-unit': this.createComputeUnit.bind(this),
       'memory-hierarchy': this.createMemoryHierarchy.bind(this),
-      'infinity-fabric': this.createInfinityFabric.bind(this)
+      'infinity-fabric': this.createInfinityFabric.bind(this),
+      'kernel-dispatch': this.createKernelDispatch.bind(this)
     };
   }
 
@@ -38,6 +39,11 @@ class DiagramRenderer {
       // Check if this is an Infinity Fabric diagram
       else if (text.includes('8-GPU MI300X System') && text.includes('Full Mesh Topology')) {
         const diagram = this.createInfinityFabric();
+        pre.replaceWith(diagram);
+      }
+      // Check if this is a Kernel Dispatch diagram
+      else if (text.includes('CPU SIDE (HOST)') && text.includes('GPU SIDE (DEVICE)')) {
+        const diagram = this.createKernelDispatch();
         pre.replaceWith(diagram);
       }
     });
@@ -409,6 +415,202 @@ class DiagramRenderer {
               font-size="12">MI300X</text>
       </g>
     `;
+  }
+
+  // Kernel Dispatch Flow Diagram
+  createKernelDispatch() {
+    const container = document.createElement('div');
+    container.className = 'diagram-container kernel-dispatch-diagram';
+    container.innerHTML = `
+      <div class="diagram-title">
+        <h3>Kernel Dispatch: CPU to GPU Execution Flow</h3>
+        <div class="diagram-subtitle">From Application Launch to SIMD Execution</div>
+      </div>
+
+      <div class="dispatch-flow">
+        <!-- CPU Side -->
+        <div class="flow-section cpu-section">
+          <div class="section-header">
+            <span class="section-icon">💻</span>
+            <h4>CPU SIDE (HOST)</h4>
+          </div>
+
+          <div class="flow-step step-1" data-step="1">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <div class="step-title">Application Code</div>
+              <div class="step-code">hipLaunchKernelGGL(myKernel, gridDim, blockDim, ...)</div>
+            </div>
+          </div>
+
+          <div class="flow-arrow">↓</div>
+
+          <div class="flow-step step-2" data-step="2">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <div class="step-title">HIP Runtime</div>
+              <div class="step-details">
+                • Validate launch parameters<br>
+                • Prepare kernel arguments<br>
+                • Allocate argument buffer
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-arrow">↓</div>
+
+          <div class="flow-step step-3" data-step="3">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <div class="step-title">HSA Runtime</div>
+              <div class="step-details">
+                • Create AQL dispatch packet<br>
+                • Copy args to GPU memory<br>
+                • Write to HSA queue<br>
+                • Ring doorbell
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PCIe Bridge -->
+        <div class="pcie-bridge">
+          <div class="pcie-label">PCIe / Memory Bus</div>
+          <div class="pcie-arrow">⬇</div>
+        </div>
+
+        <!-- GPU Side -->
+        <div class="flow-section gpu-section">
+          <div class="section-header">
+            <span class="section-icon">🎮</span>
+            <h4>GPU SIDE (DEVICE)</h4>
+          </div>
+
+          <div class="flow-step step-4" data-step="4">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <div class="step-title">Command Processor (CP)</div>
+              <div class="step-details">
+                • Read dispatch packet<br>
+                • Parse kernel descriptor<br>
+                • Decode grid dimensions<br>
+                • Calculate workgroups
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-arrow">↓</div>
+
+          <div class="flow-step step-5" data-step="5">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <div class="step-title">Workgroup Assignment</div>
+              <div class="step-details">
+                • Check CU resources (VGPR/SGPR/LDS)<br>
+                • Distribute to available CUs<br>
+                • Balance across Shader Engines
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-arrow-split">
+            <div class="arrow-line">↓</div>
+            <div class="split-label">Distribute to CUs</div>
+          </div>
+
+          <!-- CU Execution Grid -->
+          <div class="cu-execution-grid">
+            ${Array.from({length: 3}, (_, i) => `
+              <div class="cu-execution" data-cu="${i}">
+                <div class="cu-header">CU ${i === 2 ? 'N' : i}</div>
+
+                <div class="cu-step">
+                  <div class="cu-step-num">6</div>
+                  <div class="cu-step-title">Wavefront Creation</div>
+                  <div class="cu-step-detail">Split into 64-lane wavefronts</div>
+                </div>
+
+                <div class="cu-step">
+                  <div class="cu-step-num">7</div>
+                  <div class="cu-step-title">Allocate Resources</div>
+                  <div class="resource-grid">
+                    <span class="resource">VGPRs</span>
+                    <span class="resource">SGPRs</span>
+                    <span class="resource">LDS</span>
+                  </div>
+                </div>
+
+                <div class="cu-step">
+                  <div class="cu-step-num">8</div>
+                  <div class="cu-step-title">Schedule to SIMD</div>
+                  <div class="simd-grid">
+                    <div class="simd-mini">S0</div>
+                    <div class="simd-mini">S1</div>
+                    <div class="simd-mini">S2</div>
+                    <div class="simd-mini">S3</div>
+                  </div>
+                </div>
+
+                <div class="cu-step">
+                  <div class="cu-step-num">9</div>
+                  <div class="cu-step-title">Execute</div>
+                  <div class="cu-step-detail">Fetch → Decode → Execute</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="flow-arrow">↓</div>
+
+          <!-- Memory Operations -->
+          <div class="flow-step step-10" data-step="10">
+            <div class="step-number">10</div>
+            <div class="step-content">
+              <div class="step-title">Memory Operations</div>
+              <div class="memory-levels">
+                <div class="mem-level">Registers (< 1 cycle)</div>
+                <div class="mem-level">LDS (~25 cycles)</div>
+                <div class="mem-level">L1 Cache (~50 cycles)</div>
+                <div class="mem-level">L2 Cache (~150 cycles)</div>
+                <div class="mem-level">L3 Cache (~200 cycles)</div>
+                <div class="mem-level">HBM3 (~300-400 cycles)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow-arrow">↓</div>
+
+          <!-- Completion -->
+          <div class="flow-step step-11" data-step="11">
+            <div class="step-number">11</div>
+            <div class="step-content">
+              <div class="step-title">Completion</div>
+              <div class="step-details">
+                • All wavefronts complete<br>
+                • Deallocate resources<br>
+                • Signal completion<br>
+                • Notify CPU
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add animation on hover
+    container.addEventListener('mouseenter', () => {
+      const steps = container.querySelectorAll('.flow-step, .cu-execution');
+      steps.forEach((step, index) => {
+        setTimeout(() => {
+          step.style.animation = 'pulse 0.6s ease-in-out';
+          setTimeout(() => {
+            step.style.animation = '';
+          }, 600);
+        }, index * 100);
+      });
+    });
+
+    return container;
   }
 }
 

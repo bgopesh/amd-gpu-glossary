@@ -270,14 +270,138 @@ A command queue for submitting work to the GPU in the HSA programming model.
 
 The process of launching a kernel for execution on the GPU.
 
-**Steps:**
-1. Copy kernel arguments to GPU memory
-2. Submit dispatch packet to HSA queue
-3. Command Processor picks up work
-4. Workgroups distributed to available CUs
-5. Execution begins
+**Execution Flow from CPU to GPU:**
 
-**Related:** [Kernel](#kernel), [HSA Queue](#hsa-queue), [Command Processor](#command-processor)
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           CPU SIDE (HOST)                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  ┌──────────────────────────────────────────────────────────────────────┐
+  │  1. Application Code                                                 │
+  │     hipLaunchKernelGGL(myKernel, gridDim, blockDim, 0, 0, args...)  │
+  └────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+                                   ▼
+  ┌──────────────────────────────────────────────────────────────────────┐
+  │  2. HIP Runtime (hipLaunchKernel)                                    │
+  │     • Validate launch parameters                                     │
+  │     • Prepare kernel arguments                                       │
+  │     • Allocate argument buffer if needed                             │
+  └────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+                                   ▼
+  ┌──────────────────────────────────────────────────────────────────────┐
+  │  3. HSA Runtime (hsa_signal_create, hsa_queue_store_write_index)    │
+  │     • Create dispatch packet (AQL packet)                            │
+  │     • Copy kernel arguments to GPU memory                            │
+  │     • Setup grid/workgroup dimensions                                │
+  │     • Setup kernel object handle                                     │
+  │     • Write packet to HSA queue (ring buffer)                        │
+  │     • Ring doorbell (notify GPU)                                     │
+  └────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+                                   │ PCIe / Memory Bus
+                                   │
+┌──────────────────────────────────▼──────────────────────────────────────────┐
+│                           GPU SIDE (DEVICE)                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  ┌──────────────────────────────────────────────────────────────────────┐
+  │  4. Command Processor (CP)                                           │
+  │     • Read dispatch packet from HSA queue                            │
+  │     • Parse packet header and kernel descriptor                      │
+  │     • Decode grid dimensions (gridDim, blockDim)                     │
+  │     • Calculate total number of workgroups                           │
+  └────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+                                   ▼
+  ┌──────────────────────────────────────────────────────────────────────┐
+  │  5. Workgroup Assignment                                             │
+  │     • CP assigns workgroups to available Compute Units (CUs)         │
+  │     • Check CU resource availability:                                │
+  │       - VGPR/SGPR availability                                       │
+  │       - LDS availability                                             │
+  │       - Wavefront slots                                              │
+  │     • Workgroups distributed across Shader Engines and CUs           │
+  └────────────────────────────────┬─────────────────────────────────────┘
+                                   │
+                   ┌───────────────┼───────────────┐
+                   │               │               │
+                   ▼               ▼               ▼
+  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+  │   CU 0           │  │   CU 1           │  │   CU N           │
+  │                  │  │                  │  │                  │
+  │  6. Wavefront    │  │  6. Wavefront    │  │  6. Wavefront    │
+  │     Creation     │  │     Creation     │  │     Creation     │
+  │     • Split      │  │     • Split      │  │     • Split      │
+  │       workgroup  │  │       workgroup  │  │       workgroup  │
+  │       into       │  │       into       │  │       into       │
+  │       wavefronts │  │       wavefronts │  │       wavefronts │
+  │       (64 lanes) │  │       (64 lanes) │  │       (64 lanes) │
+  │                  │  │                  │  │                  │
+  │  7. Allocate     │  │  7. Allocate     │  │  7. Allocate     │
+  │     Resources    │  │     Resources    │  │     Resources    │
+  │     • VGPRs      │  │     • VGPRs      │  │     • VGPRs      │
+  │     • SGPRs      │  │     • SGPRs      │  │     • SGPRs      │
+  │     • LDS        │  │     • LDS        │  │     • LDS        │
+  │                  │  │                  │  │                  │
+  │  8. Schedule to  │  │  8. Schedule to  │  │  8. Schedule to  │
+  │     SIMD Units   │  │     SIMD Units   │  │     SIMD Units   │
+  │                  │  │                  │  │                  │
+  │  ┌─────┐┌─────┐ │  │  ┌─────┐┌─────┐ │  │  ┌─────┐┌─────┐ │
+  │  │SIMD0││SIMD1│ │  │  │SIMD0││SIMD1│ │  │  │SIMD0││SIMD1│ │
+  │  └─────┘└─────┘ │  │  └─────┘└─────┘ │  │  └─────┘└─────┘ │
+  │  ┌─────┐┌─────┐ │  │  ┌─────┐┌─────┐ │  │  ┌─────┐┌─────┐ │
+  │  │SIMD2││SIMD3│ │  │  │SIMD2││SIMD3│ │  │  │SIMD2││SIMD3│ │
+  │  └─────┘└─────┘ │  │  └─────┘└─────┘ │  │  └─────┘└─────┘ │
+  │                  │  │                  │  │                  │
+  │  9. Execute      │  │  9. Execute      │  │  9. Execute      │
+  │     Instructions │  │     Instructions │  │     Instructions │
+  │     • Fetch inst │  │     • Fetch inst │  │     • Fetch inst │
+  │     • Decode     │  │     • Decode     │  │     • Decode     │
+  │     • Execute    │  │     • Execute    │  │     • Execute    │
+  │     • Writeback  │  │     • Writeback  │  │     • Writeback  │
+  └──────────────────┘  └──────────────────┘  └──────────────────┘
+
+                              ▼ ▼ ▼
+
+  ┌──────────────────────────────────────────────────────────────────────┐
+  │ 10. Memory Operations (throughout execution)                         │
+  │     • Register File: VGPRs, SGPRs (< 1 cycle)                        │
+  │     • LDS: Workgroup shared memory (~25 cycles)                      │
+  │     • L1 Cache: Vector cache (~50 cycles)                            │
+  │     • L2 Cache: Shared across CUs (~150 cycles)                      │
+  │     • L3 Cache: Infinity Cache (~200 cycles)                         │
+  │     • HBM3: Global memory (~300-400 cycles)                          │
+  └──────────────────────────────────────────────────────────────────────┘
+
+                              ▼ ▼ ▼
+
+  ┌──────────────────────────────────────────────────────────────────────┐
+  │ 11. Completion                                                       │
+  │     • All wavefronts complete execution                              │
+  │     • Resources deallocated (VGPRs, SGPRs, LDS)                      │
+  │     • Signal completion event to HSA queue                           │
+  │     • CPU notified (if synchronous) or continues (if async)          │
+  └──────────────────────────────────────────────────────────────────────┘
+```
+
+**Key Steps Explained:**
+
+1. **Application Code**: HIP API call launches kernel with grid/block dimensions
+2. **HIP Runtime**: Validates parameters and prepares for launch
+3. **HSA Runtime**: Creates AQL (Architected Queuing Language) packet and submits to queue
+4. **Command Processor**: Hardware unit that reads queue and decodes dispatch
+5. **Workgroup Assignment**: Distributes work to Compute Units based on resource availability
+6. **Wavefront Creation**: Workgroups split into wavefronts (64 work-items each)
+7. **Resource Allocation**: VGPRs, SGPRs, and LDS allocated per wavefront
+8. **SIMD Scheduling**: Wavefronts scheduled to SIMD units within CUs
+9. **Execution**: Instructions execute across all lanes in SIMD lockstep
+10. **Memory Operations**: Access memory hierarchy as needed
+11. **Completion**: Signal completion and free resources
+
+**Related:** [Kernel](#kernel), [HSA Queue](#hsa-queue), [Command Processor](#command-processor), [Wavefront](#wavefront), [Compute Unit](#compute-unit)
 
 ## Barrier / Synchronization
 
