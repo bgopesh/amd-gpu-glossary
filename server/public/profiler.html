@@ -35,14 +35,33 @@
           <input type="text" id="app-args" class="form-input" placeholder="e.g., 1024">
         </div>
         <div class="form-group">
-          <label class="form-label">Profiling Options</label>
+          <label class="form-label">Trace Options</label>
+          <select id="trace-type" class="form-select" style="margin-bottom: 0.5rem;">
+            <option value="">No Trace</option>
+            <option value="hip-trace">HIP API Trace</option>
+            <option value="hsa-trace">HSA API Trace</option>
+            <option value="sys-trace">System Trace</option>
+            <option value="marker-trace">Marker API Trace</option>
+            <option value="runtime-trace">Runtime Trace</option>
+            <option value="hip-trace,hsa-trace">HIP + HSA</option>
+            <option value="hip-trace,sys-trace">HIP + System</option>
+            <option value="hip-trace,marker-trace">HIP + Marker</option>
+            <option value="sys-trace,marker-trace">System + Marker</option>
+            <option value="hip-trace,hsa-trace,sys-trace">Full Trace (HIP+HSA+Sys)</option>
+          </select>
+          <p style="color: var(--text-secondary); font-size: 0.75rem;">
+            Select API tracing options
+          </p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Output Options</label>
           <div style="margin-top: 0.5rem;">
-            <label style="display: block; margin-bottom: 0.5rem;">
-              <input type="checkbox" id="enable-hip-trace"> Enable HIP API Trace
+            <label style="display: block; margin-bottom: 0.3rem;">
+              <input type="checkbox" id="enable-summary"> Generate Summary
             </label>
-            <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.25rem;">
-              Traces HIP API calls (runtime and memory operations)
-            </p>
+            <label style="display: block; margin-bottom: 0.3rem;">
+              <input type="checkbox" id="enable-timestamp"> Include Timestamps
+            </label>
           </div>
         </div>
       </div>
@@ -76,6 +95,7 @@
         <div class="chart-container"><canvas id="results-chart"></canvas></div>
       </div>
       <div id="tab-raw" class="tab-content">
+        <button class="btn btn-secondary" style="margin-bottom: 1rem;" onclick="downloadOutput()">Download Output</button>
         <div class="raw-output" id="raw-output"></div>
       </div>
       <div id="tab-command" class="tab-content">

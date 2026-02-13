@@ -129,7 +129,7 @@ router.get('/profiler/applications', (req, res) => {
 // POST /api/profiler/run - Run profiling
 router.post('/profiler/run', async (req, res) => {
   try {
-    const { application, counters, customPath, appArgs, hipTrace } = req.body;
+    const { application, counters, customPath, appArgs, traceType, enableSummary, enableTimestamp } = req.body;
 
     if (!application && !customPath) {
       return res.status(400).json({ error: 'Application or custom path required' });
@@ -140,7 +140,9 @@ router.post('/profiler/run', async (req, res) => {
       counters: counters || [],
       customPath,
       appArgs: appArgs || '',
-      hipTrace: hipTrace || false
+      traceType: traceType || '',
+      enableSummary: enableSummary || false,
+      enableTimestamp: enableTimestamp || false
     });
 
     res.json(result);

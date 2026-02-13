@@ -210,7 +210,7 @@ class Profiler {
    * Run profiling with rocprofv3
    */
   async runProfiling(options) {
-    const { application, counters, customPath, appArgs, hipTrace } = options;
+    const { application, counters, customPath, appArgs, traceType, enableSummary, enableTimestamp } = options;
 
     // Determine executable path
     let execPath;
@@ -233,9 +233,23 @@ class Profiler {
       cmd += ' --stats';
     }
 
-    // Add HIP trace if enabled
-    if (hipTrace) {
-      cmd += ' --hip-trace';
+    // Add trace options if specified
+    if (traceType && traceType.trim()) {
+      // traceType can be comma-separated like "hip-trace,hsa-trace"
+      const traces = traceType.split(',').map(t => t.trim()).filter(t => t);
+      traces.forEach(trace => {
+        cmd += ` --${trace}`;
+      });
+    }
+
+    // Add summary option
+    if (enableSummary) {
+      cmd += ' --summary';
+    }
+
+    // Add timestamp option
+    if (enableTimestamp) {
+      cmd += ' --timestamp on';
     }
 
     // Add output format

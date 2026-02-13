@@ -90,7 +90,9 @@ async function runProfiling() {
   const application = document.getElementById('app-select').value;
   const customPath = document.getElementById('custom-path').value.trim();
   const appArgs = document.getElementById('app-args').value.trim();
-  const enableHipTrace = document.getElementById('enable-hip-trace').checked;
+  const traceType = document.getElementById('trace-type').value;
+  const enableSummary = document.getElementById('enable-summary').checked;
+  const enableTimestamp = document.getElementById('enable-timestamp').checked;
 
   if (!application && !customPath) {
     alert('Please select a sample application or enter a custom path');
@@ -113,7 +115,9 @@ async function runProfiling() {
         customPath: customPath || undefined,
         counters: selectedCounters,
         appArgs,
-        hipTrace: enableHipTrace
+        traceType: traceType || undefined,
+        enableSummary,
+        enableTimestamp
       })
     });
 
@@ -204,4 +208,17 @@ function showTab(tabName) {
 
   document.querySelector("[onclick=\"showTab('" + tabName + "')\"]").classList.add('active');
   document.getElementById('tab-' + tabName).classList.add('active');
+}
+
+function downloadOutput() {
+  const outputText = document.getElementById('raw-output').textContent;
+  const blob = new Blob([outputText], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'rocprof-output-' + Date.now() + '.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
