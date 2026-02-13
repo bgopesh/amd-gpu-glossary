@@ -90,6 +90,7 @@ async function runProfiling() {
   const application = document.getElementById('app-select').value;
   const customPath = document.getElementById('custom-path').value.trim();
   const appArgs = document.getElementById('app-args').value.trim();
+  const enableHipTrace = document.getElementById('enable-hip-trace').checked;
 
   if (!application && !customPath) {
     alert('Please select a sample application or enter a custom path');
@@ -111,7 +112,8 @@ async function runProfiling() {
         application,
         customPath: customPath || undefined,
         counters: selectedCounters,
-        appArgs
+        appArgs,
+        hipTrace: enableHipTrace
       })
     });
 

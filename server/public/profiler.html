@@ -34,6 +34,17 @@
           <label class="form-label">Application Arguments</label>
           <input type="text" id="app-args" class="form-input" placeholder="e.g., 1024">
         </div>
+        <div class="form-group">
+          <label class="form-label">Profiling Options</label>
+          <div style="margin-top: 0.5rem;">
+            <label style="display: block; margin-bottom: 0.5rem;">
+              <input type="checkbox" id="enable-hip-trace"> Enable HIP API Trace
+            </label>
+            <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.25rem;">
+              Traces HIP API calls (runtime and memory operations)
+            </p>
+          </div>
+        </div>
       </div>
 
       <div class="profiler-panel">

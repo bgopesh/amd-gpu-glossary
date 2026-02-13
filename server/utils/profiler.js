@@ -210,7 +210,7 @@ class Profiler {
    * Run profiling with rocprofv3
    */
   async runProfiling(options) {
-    const { application, counters, customPath, appArgs } = options;
+    const { application, counters, customPath, appArgs, hipTrace } = options;
 
     // Determine executable path
     let execPath;
@@ -225,12 +225,17 @@ class Profiler {
     // Build rocprofv3 command
     let cmd = 'rocprofv3';
 
-    // Add counters if specified
+    // Add counters if specified, otherwise use stats mode
     if (counters && counters.length > 0) {
       cmd += ` --pmc ${counters.join(',')}`;
     } else {
-      // Use basic stats mode
+      // Use basic stats mode when no counters are specified
       cmd += ' --stats';
+    }
+
+    // Add HIP trace if enabled
+    if (hipTrace) {
+      cmd += ' --hip-trace';
     }
 
     // Add output format
