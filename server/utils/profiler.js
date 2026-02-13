@@ -284,14 +284,35 @@ class Profiler {
         counters: {}
       };
 
-      // Try to parse CSV output
+      // Try to parse CSV output files
       try {
-        const csvPath = '/tmp/rocprof-results/pmc_1.csv';
-        const csvContent = await fs.readFile(csvPath, 'utf-8');
-        result.rawData = csvContent;
-        result.counters = this.parseCSVCounters(csvContent);
+        // Look for various output files
+        const files = await fs.readdir('/tmp/rocprof-results').catch(() => []);
+
+        for (const file of files) {
+          const filePath = `/tmp/rocprof-results/${file}`;
+
+          if (file.includes('pmc') && file.endsWith('.csv')) {
+            // Performance counter data
+            const csvContent = await fs.readFile(filePath, 'utf-8');
+            result.counters = this.parseCSVCounters(csvContent);
+          } else if (file.includes('hip_api_trace') || file.includes('hsa_api_trace') || file.includes('trace')) {
+            // Trace data
+            const traceContent = await fs.readFile(filePath, 'utf-8');
+            if (!result.traceData) result.traceData = [];
+            result.traceData.push({
+              type: file,
+              content: traceContent,
+              parsed: this.parseTraceCSV(traceContent)
+            });
+          }
+        }
       } catch (e) {
-        // CSV might not exist, parse from stdout
+        console.error('Error reading result files:', e);
+      }
+
+      // Parse from stdout/stderr if no files found
+      if (!result.counters || Object.keys(result.counters).length === 0) {
         result.counters = this.parseTextOutput(stdout + stderr);
       }
 
@@ -348,6 +369,45 @@ class Profiler {
     });
 
     return counters;
+  }
+
+  /**
+   * Parse trace CSV data
+   */
+  parseTraceCSV(csvContent) {
+    const lines = csvContent.split('\n');
+    const traces = [];
+
+    if (lines.length < 2) return traces;
+
+    // Parse header
+    const header = lines[0].split(',').map(h => h.trim());
+
+    // Common header fields: Name, Start, End, Duration, etc.
+    const nameIdx = header.findIndex(h => h.toLowerCase().includes('name'));
+    const startIdx = header.findIndex(h => h.toLowerCase().includes('start') || h.toLowerCase().includes('begin'));
+    const endIdx = header.findIndex(h => h.toLowerCase().includes('end'));
+    const durationIdx = header.findIndex(h => h.toLowerCase().includes('duration'));
+
+    // Parse data rows
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+
+      const parts = line.split(',');
+      const trace = {};
+
+      if (nameIdx >= 0 && nameIdx < parts.length) trace.name = parts[nameIdx].trim();
+      if (startIdx >= 0 && startIdx < parts.length) trace.start = parseFloat(parts[startIdx]);
+      if (endIdx >= 0 && endIdx < parts.length) trace.end = parseFloat(parts[endIdx]);
+      if (durationIdx >= 0 && durationIdx < parts.length) trace.duration = parseFloat(parts[durationIdx]);
+
+      if (trace.name) {
+        traces.push(trace);
+      }
+    }
+
+    return traces;
   }
 }
 

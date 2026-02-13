@@ -87,12 +87,24 @@
     <div id="results-container" class="results-container" style="display: none;">
       <h2 class="panel-title">Results</h2>
       <div class="results-tabs">
-        <button class="tab-button active" onclick="showTab('chart')">Chart</button>
+        <button class="tab-button active" onclick="showTab('summary')">Summary</button>
+        <button class="tab-button" onclick="showTab('timeline')">Timeline</button>
+        <button class="tab-button" onclick="showTab('duration')">Duration</button>
+        <button class="tab-button" onclick="showTab('counters')">Counters</button>
         <button class="tab-button" onclick="showTab('raw')">Raw Output</button>
         <button class="tab-button" onclick="showTab('command')">Command</button>
       </div>
-      <div id="tab-chart" class="tab-content active">
-        <div class="chart-container"><canvas id="results-chart"></canvas></div>
+      <div id="tab-summary" class="tab-content active">
+        <div id="summary-stats"></div>
+      </div>
+      <div id="tab-timeline" class="tab-content">
+        <div class="chart-container"><canvas id="timeline-chart"></canvas></div>
+      </div>
+      <div id="tab-duration" class="tab-content">
+        <div class="chart-container"><canvas id="duration-chart"></canvas></div>
+      </div>
+      <div id="tab-counters" class="tab-content">
+        <div class="chart-container"><canvas id="counters-chart"></canvas></div>
       </div>
       <div id="tab-raw" class="tab-content">
         <button class="btn btn-secondary" style="margin-bottom: 1rem;" onclick="downloadOutput()">Download Output</button>
