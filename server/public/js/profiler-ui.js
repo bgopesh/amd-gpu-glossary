@@ -19,13 +19,84 @@ async function checkStatus() {
 
     const indicator = document.getElementById('status-indicator');
     if (status.available) {
-      indicator.innerHTML = '<div class="status-indicator status-success"><span class="status-dot"></span>ROCprofv3 Available: ' + (status.version || 'Unknown') + '</div>';
+      // Parse version info
+      const versionInfo = parseVersionInfo(status.version || '');
+
+      // Build version details array
+      const details = [];
+      if (versionInfo.version) details.push(`Version: ${versionInfo.version}`);
+      if (versionInfo.system) details.push(`System: ${versionInfo.system}`);
+      if (versionInfo.rocm) details.push(`ROCm: ${versionInfo.rocm}`);
+
+      const detailsHtml = details.length > 0
+        ? `<span class="version-separator">|</span><span class="version-detail">${details.join(' • ')}</span>`
+        : '';
+
+      indicator.innerHTML = `
+        <div class="status-indicator status-success">
+          <span class="status-dot"></span>
+          <div class="version-info">
+            <div class="version-title">ROCprofv3 Available</div>
+            ${detailsHtml}
+          </div>
+        </div>
+      `;
     } else {
       indicator.innerHTML = '<div class="status-indicator status-error"><span class="status-dot"></span>ROCprofv3 Not Available: ' + (status.error || 'Unknown error') + '</div>';
     }
   } catch (error) {
     console.error('Error checking status:', error);
   }
+}
+
+function parseVersionInfo(versionString) {
+  const info = {
+    version: null,
+    system: null,
+    rocm: null
+  };
+
+  if (!versionString) return info;
+
+  const lines = versionString.split('\n');
+
+  for (const line of lines) {
+    const trimmedLine = line.trim();
+
+    // Match version number (e.g., "version: 1.1.0")
+    if (trimmedLine.match(/^\s*version:/i)) {
+      const versionMatch = trimmedLine.match(/version:\s*(\d+\.\d+(?:\.\d+)?)/i);
+      if (versionMatch && !info.version) {
+        info.version = versionMatch[1];
+      }
+    }
+
+    // Match system_name (e.g., "system_name: Linux" or look for GPU architecture)
+    if (trimmedLine.match(/^\s*system_name:/i)) {
+      const systemMatch = trimmedLine.match(/system_name:\s*(\S+)/i);
+      if (systemMatch && !info.system) {
+        info.system = systemMatch[1];
+      }
+    }
+
+    // Also try to find GPU/target name (e.g., "Target: gfx90a" or "GPU: gfx1030")
+    if (trimmedLine.match(/(?:Target|GPU):/i)) {
+      const gpuMatch = trimmedLine.match(/(?:Target|GPU):\s*([a-z0-9]+)/i);
+      if (gpuMatch) {
+        info.system = gpuMatch[1]; // Prefer GPU name over system_name
+      }
+    }
+
+    // Match ROCm version (e.g., "rocm_version: 7.2.0")
+    if (trimmedLine.match(/^\s*rocm_version:/i)) {
+      const rocmMatch = trimmedLine.match(/rocm_version:\s*(\d+\.\d+(?:\.\d+)?)/i);
+      if (rocmMatch && !info.rocm) {
+        info.rocm = rocmMatch[1];
+      }
+    }
+  }
+
+  return info;
 }
 
 async function loadApplications() {
