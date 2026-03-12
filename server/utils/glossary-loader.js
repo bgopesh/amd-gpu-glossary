@@ -16,6 +16,12 @@ const md = new MarkdownIt({
 // Section definitions
 const SECTIONS = [
   {
+    id: 'rocm-stack',
+    title: 'ROCm Stack',
+    file: '00-rocm-stack.md',
+    description: 'Complete ROCm software and hardware stack overview'
+  },
+  {
     id: 'device-hardware',
     title: 'Device Hardware',
     file: '01-device-hardware.md',
