@@ -4,13 +4,20 @@ Programming models, execution concepts, and on-device software abstractions for 
 
 ## HIP (Heterogeneous-compute Interface for Portability)
 
-AMD's C++ programming language for GPU computing. HIP provides a CUDA-like API that can compile to both AMD and NVIDIA GPUs.
+AMD's C++ programming language for GPU computing. HIP provides a CUDA-like API that can compile to both AMD and NVIDIA GPUs, enabling portable GPU code across vendors.
 
 **Key characteristics:**
-- Very similar syntax to CUDA
-- Single source code for AMD and NVIDIA GPUs
-- hipcc compiler supports both backends
-- Extensive CUDA compatibility layer
+- Near-identical syntax to CUDA (often just renaming `cuda*` to `hip*`)
+- Single source code targets both AMD (via ROCm) and NVIDIA (via CUDA) backends
+- hipcc compiler automatically selects appropriate backend
+- Extensive CUDA compatibility layer (hipify tools convert CUDA to HIP)
+- Direct access to AMD-specific features (wavefront intrinsics, LDS control)
+
+**Programming model:**
+- Host code (CPU) allocates memory, launches kernels, manages execution
+- Device code (GPU) runs massively parallel computations
+- Asynchronous execution with streams for overlapping operations
+- Memory spaces: global (HBM), shared/LDS (on-chip), registers (per-thread)
 
 **Example:**
 ```cpp
@@ -18,7 +25,16 @@ __global__ void vectorAdd(float* a, float* b, float* c, int n) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx < n) c[idx] = a[idx] + b[idx];
 }
+
+// Host launches kernel: <<<grid_size, block_size>>>
+vectorAdd<<<1024, 256>>>(d_a, d_b, d_c, n);
 ```
+
+**When to use HIP:**
+- Need portability between AMD and NVIDIA GPUs
+- Migrating existing CUDA code to AMD
+- Want CUDA-like productivity on ROCm platform
+- Building vendor-neutral GPU libraries
 
 **Related:** [ROCm](#rocm), [hipcc](#hipcc), [Kernel](#kernel)
 
@@ -987,15 +1003,34 @@ rocprofv3 --pmc VALUUtilization -- ./myapp
 
 ## Work-Item
 
-A single thread of execution in the AMD programming model. Equivalent to CUDA's "thread."
+A single thread of execution in the AMD GPU programming model. Each work-item represents one instance of a kernel function executing with its own data. Equivalent to CUDA's "thread."
 
 **Key characteristics:**
-- Identified by `get_global_id()` or `threadIdx`/`blockIdx` in HIP
-- Executes independently (logically)
-- 64 work-items form a wavefront
-- Has private registers and can access LDS
+- Basic unit of parallelism (logically independent, but executes in groups)
+- Identified by unique index: `get_global_id()` (OpenCL) or `threadIdx`/`blockIdx` (HIP)
+- Grouped into wavefronts (64 work-items) for hardware execution
+- Has private registers (VGPRs) and local variables
+- Can access shared LDS memory within its workgroup
+- Can access global HBM memory across all workgroups
 
-**Related:** [Wavefront](#wavefront), [Workgroup](#workgroup)
+**Indexing:**
+```cpp
+// Global ID across entire kernel launch
+int gid = blockIdx.x * blockDim.x + threadIdx.x;
+
+// Local ID within workgroup
+int lid = threadIdx.x;
+
+// Workgroup ID
+int wgid = blockIdx.x;
+```
+
+**Execution model:**
+- Logical independence: each work-item appears to execute independently
+- Physical execution: groups of 64 execute together as wavefronts in SIMT fashion
+- Hardware limitation: wavefront divergence when work-items take different paths
+
+**Related:** [Wavefront](#wavefront), [Workgroup](#workgroup), [Work-Item Dimensions](#work-item-dimensions)
 
 ## Workgroup
 
@@ -1096,16 +1131,64 @@ e.g., <<<(1024, 1, 1), (256, 1, 1)>>>
 
 ## Work-Item Dimensions
 
-The 3D indexing scheme (x, y, z) used to identify individual work-items within workgroups and grids.
+The 3D indexing scheme (x, y, z) used to identify individual work-items within workgroups and grids. Allows mapping multi-dimensional data (images, volumes, matrices) naturally to GPU threads.
+
+**Why 3D indexing:**
+- Natural mapping to 2D/3D data structures (images, matrices, volumes)
+- Improves code readability (x for width, y for height, z for depth)
+- Hardware still executes linearly, but programmer thinks in problem space
 
 **HIP syntax:**
 ```cpp
+// Thread indices within workgroup (0 to blockDim-1)
+int localX = threadIdx.x;
+int localY = threadIdx.y;
+int localZ = threadIdx.z;
+
+// Workgroup indices within grid (0 to gridDim-1)
+int wgX = blockIdx.x;
+int wgY = blockIdx.y;
+int wgZ = blockIdx.z;
+
+// Global thread indices (most common)
 int globalX = blockIdx.x * blockDim.x + threadIdx.x;
 int globalY = blockIdx.y * blockDim.y + threadIdx.y;
 int globalZ = blockIdx.z * blockDim.z + threadIdx.z;
 ```
 
-**Related:** [Work-Item](#work-item), [Grid](#grid)
+**Common patterns:**
+```cpp
+// 1D: Vector operations
+int i = blockIdx.x * blockDim.x + threadIdx.x;
+output[i] = input[i] * 2;
+
+// 2D: Image/matrix operations
+int x = blockIdx.x * blockDim.x + threadIdx.x;
+int y = blockIdx.y * blockDim.y + threadIdx.y;
+int idx = y * width + x;  // Row-major indexing
+output[idx] = input[idx];
+
+// 3D: Volume operations
+int x = blockIdx.x * blockDim.x + threadIdx.x;
+int y = blockIdx.y * blockDim.y + threadIdx.y;
+int z = blockIdx.z * blockDim.z + threadIdx.z;
+int idx = z * width * height + y * width + x;
+```
+
+**Launch configuration:**
+```cpp
+// 1D launch: 1M elements, 256 threads/block
+int threads = 256;
+int blocks = (1000000 + threads - 1) / threads;
+kernel<<<blocks, threads>>>(data);
+
+// 2D launch: 1024x1024 image, 16x16 threads/block
+dim3 threads(16, 16);
+dim3 blocks((1024 + 15) / 16, (1024 + 15) / 16);
+kernel<<<blocks, threads>>>(image);
+```
+
+**Related:** [Work-Item](#work-item), [Grid](#grid), [Workgroup](#workgroup)
 
 ## GCN ISA (Graphics Core Next Instruction Set Architecture)
 
@@ -1133,27 +1216,95 @@ The instruction set architecture for AMD's Compute DNA (CDNA) datacenter GPUs (M
 
 ## Code Object
 
-The compiled binary containing GPU kernels and metadata, ready for loading and execution.
+The compiled binary containing GPU kernels and metadata, ready for loading and execution on AMD GPUs. Code objects are the final output of the HIP/ROCm compilation pipeline.
 
 **Key characteristics:**
-- ELF format binary
-- Contains ISA code for specific GPU architecture
-- Includes kernel metadata (register usage, LDS size, etc.)
-- Generated by hipcc/ROCm compiler
+- ELF format binary (standard Linux executable format)
+- Contains machine code (ISA) for specific GPU architecture (gfx90a, gfx942, etc.)
+- Includes kernel metadata: register usage, LDS requirements, workgroup size limits
+- Generated by hipcc/ROCm compiler toolchain (LLVM-based)
+- Architecture-specific: code for MI250X won't run on MI300X without recompilation
 
-**Related:** [Kernel](#kernel), [hipcc](#hipcc)
+**Structure:**
+```
+Code Object (.co or embedded in executable)
+├── ELF Header (identifies architecture: gfx90a, gfx942)
+├── .text section (GPU machine code/ISA)
+├── .rodata (constants, __constant__ memory)
+├── Kernel metadata:
+│   ├── Register usage (VGPRs, SGPRs)
+│   ├── LDS size requirements
+│   ├── Kernel arguments (types, alignment)
+│   ├── Workgroup size limits
+│   └── Code properties (uses dynamic LDS, barriers, etc.)
+└── Symbol table (kernel names)
+```
+
+**Compilation flow:**
+```
+HIP Source (.hip, .cpp)
+    ↓ hipcc
+LLVM IR
+    ↓ AMDGPU backend
+GPU ISA assembly
+    ↓ assembler/linker
+Code Object (.co)
+    ↓ embedded or loaded at runtime
+GPU execution
+```
+
+**Inspection:**
+```bash
+# View code object metadata
+rocm-objdump -d kernel.co
+
+# Extract kernel information
+rocm-readelf -s kernel.co
+```
+
+**Related:** [Kernel](#kernel), [hipcc](#hipcc), [GCN ISA](#gcn-isa-graphics-core-next-instruction-set-architecture)
 
 ## HSA (Heterogeneous System Architecture)
 
-An open standard that AMD GPUs implement for unified CPU-GPU programming and memory management.
+An open standard that AMD GPUs implement for unified CPU-GPU programming and memory management. HSA provides a foundation for tight CPU-GPU integration with minimal overhead.
 
 **Key features:**
-- Shared virtual memory between CPU and GPU
-- User-mode queue submission (no kernel driver calls)
-- Coherent memory access
-- Standardized runtime and queue model
+- **Shared virtual memory:** CPU and GPU see the same address space (no separate device pointers)
+- **User-mode queue submission:** Direct hardware queue access without kernel driver syscalls
+- **Coherent memory access:** CPU and GPU can access same data with automatic coherency
+- **Standardized runtime:** Common programming model across HSA-compliant devices
+- **Signals:** Low-latency synchronization primitives for CPU-GPU coordination
 
-**Related:** [ROCm](#rocm), [HSA Queue](#hsa-queue)
+**Benefits:**
+- Simplified programming: single pointer space, no explicit data transfers
+- Lower latency: user-space submission eliminates driver overhead
+- Fine-grained synchronization: signals enable efficient CPU-GPU interaction
+- Platform for ROCm: ROCm runtime built on HSA foundation
+
+**Architecture:**
+```
+Application
+    ↓
+HSA Runtime API
+    ↓
+User-space queues (ring buffers in CPU memory)
+    ↓
+GPU command processor reads queues directly
+    ↓
+Kernel execution on CUs
+```
+
+**Memory model:**
+- Fine-grained system memory: coherent between CPU and GPU
+- Coarse-grained system memory: faster but requires explicit synchronization
+- GPU local memory (HBM): fastest, GPU-only access
+
+**Why HSA matters:**
+- Enables ROCm's low-overhead execution model
+- Foundation for unified memory programming
+- Critical for CPU-GPU heterogeneous workloads
+
+**Related:** [ROCm](#rocm), [HSA Queue](#hsa-queue), [Unified Memory](#unified-memory--managed-memory)
 
 ## HSA Queue
 
@@ -2224,26 +2375,54 @@ rocgdb ./myapp
 
 ## Wave Divergence
 
-When work-items within the same wavefront take different execution paths (e.g., different branches of an if-statement).
+When work-items within the same wavefront take different execution paths due to data-dependent branching. Since wavefronts execute in SIMT (Single Instruction Multiple Thread) fashion, all 64 threads must execute the same instruction together. When threads diverge, both paths execute serially with inactive threads masked off.
 
-**Impact:**
-- Both branches execute serially
-- Some lanes masked off during each branch
-- Reduces effective parallelism
-- Can significantly hurt performance
+**How it happens:**
+- Data-dependent branches: `if (data[tid] > threshold)`
+- Loop iteration count varies per thread
+- Early exit conditions differ across threads
+
+**Performance impact:**
+- **Serial execution:** All divergent paths execute sequentially (time = sum of all paths)
+- **Reduced throughput:** Masked-off threads waste cycles
+- **Example:** If 32 threads take branch A and 32 take branch B, execution time doubles
+- **VALU utilization drops:** Hardware counters show <100% SIMD lane utilization
 
 **Example of divergence:**
 ```cpp
+// BAD: Divergence within wavefront (64 threads)
 if (threadIdx.x < 32) {
-    // Only half of wavefront active
-    doSomething();
+    doSomething();      // Threads 0-31 active, 32-63 masked
 } else {
-    // Other half active
-    doSomethingElse();
+    doSomethingElse();  // Threads 32-63 active, 0-31 masked
 }
+// Total time = time(doSomething) + time(doSomethingElse)
+
+// BETTER: Divergence at wavefront boundaries
+// Workgroup has 256 threads = 4 wavefronts
+// Wavefronts 0,1 take one path, wavefronts 2,3 take another
+if (threadIdx.x < 128) {
+    doSomething();      // Wavefronts 0,1 execute
+} else {
+    doSomethingElse();  // Wavefronts 2,3 execute
+}
+// Wavefronts execute independently, no serialization within each wave
 ```
 
-**Related:** [Wavefront](#wavefront), [Performance Optimization](#performance-optimization)
+**Mitigation strategies:**
+- Reorganize data to minimize divergence
+- Use branchless code: `result = condition ? a : b` (compiles to select instruction)
+- Ensure branch conditions align with wavefront boundaries (multiples of 64)
+- Use `__builtin_amdgcn_ballot()` to detect divergence patterns
+
+**Detection:**
+```bash
+# Check VALU utilization (low values indicate divergence)
+rocprofv3 --pmc VALUUtilization -- ./app
+# <80% suggests significant divergence or partial wavefronts
+```
+
+**Related:** [Wavefront](#wavefront), [SIMT](#simt-single-instruction-multiple-thread), [EXEC Mask](#execution-masking)
 
 ## Occupancy
 
@@ -2665,67 +2844,269 @@ Golden Rule: Profile, don't guess!
 
 ## Atomic Operations
 
-Memory operations that execute atomically, ensuring thread-safe updates to shared memory.
+Memory operations that execute atomically (read-modify-write as indivisible unit), ensuring thread-safe updates to shared memory without data races. Essential for coordination between threads that cannot use barriers.
 
 **Common operations:**
 ```cpp
-atomicAdd(address, value);
-atomicCAS(address, compare, value); // Compare-and-swap
-atomicExch(address, value);
-atomicMin/Max(address, value);
+// Arithmetic
+atomicAdd(address, value);         // *address += value
+atomicSub(address, value);         // *address -= value
+
+// Compare and swap
+atomicCAS(address, compare, value); // if (*addr == compare) *addr = value
+
+// Exchange
+atomicExch(address, value);        // swap *address with value
+
+// Min/Max
+atomicMin(address, value);         // *address = min(*address, value)
+atomicMax(address, value);         // *address = max(*address, value)
+
+// Bitwise
+atomicAnd/Or/Xor(address, value);
 ```
 
-**Key characteristics:**
-- Serialized execution (slow if contended)
-- Work across workgroups (global memory)
-- Available in LDS for intra-workgroup atomics
+**How they work:**
+- Hardware guarantees read-modify-write happens without interference
+- Other threads see either old or new value, never intermediate state
+- Implementation uses cache coherence protocol or memory controller serialization
 
-**Related:** [LDS](#lds-local-data-share), [Synchronization](#barrier--synchronization)
+**Memory scopes:**
+- **Global memory atomics:** Visible across all workgroups, all CUs, entire GPU
+- **LDS atomics:** Fast, workgroup-local (threads in same workgroup)
+- **System atomics:** CPU-GPU shared memory (requires fine-grained memory)
+
+**Performance characteristics:**
+- **Serialization:** Multiple threads atomically updating same address serialize (queue up)
+- **Contention:** High contention = severe performance degradation
+- **Example:** 1000 threads atomically adding to same counter ≈ serial execution
+- **LDS atomics:** Much faster than global atomics (on-chip, lower latency)
+
+**Use cases:**
+```cpp
+// Global histogram (contention issue if many bins)
+atomicAdd(&histogram[bin], 1);
+
+// Lock-free counters
+int myWork = atomicAdd(&globalCounter, 1);
+
+// Reduction without barriers
+atomicAdd(&result, partial_sum);
+```
+
+**Best practices:**
+- Minimize contention: use more counters, reduce per LDS first
+- Consider alternatives: prefix sums, hierarchical reductions
+- Use LDS atomics when possible (workgroup-local data)
+- Avoid atomics in tight loops with high thread count
+
+**Related:** [LDS](#lds-local-data-share), [Synchronization](#barrier--synchronization), [Memory Ordering](#memory-ordering)
 
 ## Memory Coalescing
 
-When consecutive work-items in a wavefront access consecutive memory addresses, allowing the hardware to combine multiple accesses into fewer transactions.
+When consecutive work-items in a wavefront access consecutive memory addresses, the GPU memory system combines multiple accesses into fewer, larger transactions. Critical optimization for achieving peak memory bandwidth.
 
-**Best case (coalesced):**
+**Why it matters:**
+- HBM memory transfers data in large chunks (typically 64-128 byte cache lines)
+- Coalesced access: 64 threads load contiguous data → 1-2 memory transactions
+- Uncoalesced access: 64 threads load scattered data → up to 64 separate transactions
+- Performance difference: 10-100x bandwidth loss for uncoalesced patterns
+
+**Perfect coalescing:**
 ```cpp
-// Each thread loads consecutive 4-byte element
+// Threads 0-63 in wavefront access consecutive floats
+// Thread 0: array[0], Thread 1: array[1], ..., Thread 63: array[63]
 float value = array[threadIdx.x];
+// Result: 1 memory transaction (256 bytes for 64 × 4-byte floats)
+```
+
+**Partial coalescing:**
+```cpp
+// Strided access: threads access every 2nd element
+float value = array[threadIdx.x * 2];
+// Result: 50% efficiency, reads gaps between useful data
 ```
 
 **Worst case (uncoalesced):**
 ```cpp
-// Random or strided access pattern
+// Random access pattern
 float value = array[randomIndex[threadIdx.x]];
+// Result: Up to 64 separate transactions, catastrophic bandwidth loss
+
+// Also bad: Column-major matrix access in row-major storage
+float value = matrix[threadIdx.x][column];  // 64 rows, same column
+// Threads hit different cache lines
 ```
 
-**Related:** [Wavefront](#wavefront), [HBM](#hbm-high-bandwidth-memory), [Memory Bandwidth](#memory-bandwidth)
+**How hardware handles coalescing:**
+1. Memory controller collects all 64 memory requests from wavefront
+2. Identifies which requests fall in same cache line (64-128 bytes)
+3. Issues minimal number of transactions to cover all addresses
+4. Returns data to appropriate threads
+
+**Optimization patterns:**
+```cpp
+// GOOD: Row-major matrix, threads process consecutive elements
+int idx = blockIdx.x * blockDim.x + threadIdx.x;
+output[idx] = input[idx] * 2;
+
+// GOOD: Transpose with shared memory to enable coalescing
+__shared__ float tile[32][32];
+tile[threadIdx.y][threadIdx.x] = input[row][col];  // Coalesced read
+__syncthreads();
+output[col][row] = tile[threadIdx.x][threadIdx.y]; // Coalesced write
+
+// BAD: Struct of Arrays (SoA) vs Array of Structures (AoS)
+// AoS - bad coalescing
+struct Particle { float x, y, z; };
+float x = particles[tid].x;  // Threads access stride-12 bytes
+
+// SoA - good coalescing
+float x = particles_x[tid];  // Consecutive access
+```
+
+**Checking coalescing efficiency:**
+```bash
+# Measure achieved memory bandwidth
+rocprofv3 --pmc TCC_EA_RDREQ_32B,TCC_EA_WRREQ_32B -- ./app
+# Compare to theoretical peak (MI300X: ~5.2 TB/s)
+```
+
+**Related:** [Wavefront](#wavefront), [HBM](#hbm-high-bandwidth-memory), [Memory Bandwidth](#memory-bandwidth), [Cache](#l1-l2-cache)
 
 ## Unified Memory / Managed Memory
 
-Memory that can be accessed from both CPU and GPU with automatic migration.
+Memory that can be accessed from both CPU and GPU using a single pointer, with automatic data migration between host and device. Simplifies programming by eliminating explicit memory copies, at potential performance cost.
 
 **Key characteristics:**
-- Single pointer valid on both CPU and GPU
-- Runtime handles data migration
-- Simplified programming model
-- May have performance overhead vs. explicit copying
+- **Single address space:** Same pointer works on CPU and GPU (no separate `d_ptr`)
+- **Automatic migration:** Runtime moves data between CPU RAM and GPU HBM as needed
+- **On-demand paging:** Data migrates when accessed (page fault triggers transfer)
+- **Simplified code:** No `hipMemcpy`, fewer memory management bugs
+- **Performance trade-off:** Migration overhead vs. explicit control
 
 **HIP usage:**
 ```cpp
-hipMallocManaged(&ptr, size);
-// Use ptr on both CPU and GPU
+float *ptr;
+hipMallocManaged(&ptr, size);  // Allocate unified memory
+
+// Use on CPU
+for (int i = 0; i < n; i++) ptr[i] = i;
+
+// Use on GPU (runtime migrates data automatically)
+kernel<<<blocks, threads>>>(ptr);
+hipDeviceSynchronize();
+
+// Use on CPU again (runtime migrates back if needed)
+printf("%f\n", ptr[0]);
+
+hipFree(ptr);
 ```
 
-**Related:** [HSA](#hsa-heterogeneous-system-architecture), [Memory Management](#memory-management)
+**How it works:**
+1. Allocation creates memory accessible to both CPU and GPU
+2. First access (CPU or GPU) triggers page fault
+3. Runtime migrates memory to accessing device
+4. Subsequent accesses on same device: no migration
+5. Access from other device: migrate again
+
+**Performance considerations:**
+- **Overhead:** Page faults and migration add latency
+- **Thrashing:** Repeated CPU-GPU-CPU access causes constant migration
+- **Prefetching:** `hipMemPrefetchAsync()` hints where data will be used
+- **Advice:** `hipMemAdvise()` provides usage hints to runtime
+
+**When to use:**
+- Prototyping: rapid development without memory management complexity
+- Irregular access patterns: hard to predict which data GPU needs
+- Small data: migration overhead negligible
+- CPU-GPU collaboration: both process same data structure
+
+**When to avoid:**
+- Performance-critical code: explicit `hipMemcpy` gives control
+- Large transfers: migration overhead significant
+- Predictable patterns: better to explicitly manage transfers
+
+**Example - iterative solver:**
+```cpp
+// Unified memory simplifies CPU-GPU collaboration
+hipMallocManaged(&data, size);
+
+for (int iter = 0; iter < maxIter; iter++) {
+    gpuKernel<<<...>>>(data);     // GPU computes
+    hipDeviceSynchronize();
+
+    if (checkConvergence(data)) break;  // CPU checks
+}
+```
+
+**Related:** [HSA](#hsa-heterogeneous-system-architecture), [Memory Management](#memory-management), [HBM](#hbm-high-bandwidth-memory)
 
 ## Constant Memory
 
-Read-only memory optimized for broadcast reads (all threads read same address).
+Read-only memory space optimized for broadcast reads where all threads in a wavefront read the same address. Ideal for kernel parameters, lookup tables, and coefficients shared across all threads.
 
 **Key characteristics:**
-- Cached efficiently when all threads read same value
-- Declared with `__constant__` qualifier
-- Limited size (64 KB typical)
-- Poor performance for divergent reads
+- **Broadcast optimization:** Single read serves entire wavefront when all threads access same address
+- **Cached aggressively:** Dedicated constant cache (L1) with broadcast capability
+- **Read-only:** Cannot be written from device code
+- **Limited size:** Typically 64 KB per GPU (check device properties)
+- **Host writable:** Updated from CPU between kernel launches
+- **Declaration:** `__constant__` qualifier in device code
 
-**Related:** [Memory Hierarchy](#memory-hierarchy), [Kernel](#kernel)
+**Usage:**
+```cpp
+// Declare constant memory (global scope)
+__constant__ float coefficients[256];
+
+// Host updates constant memory
+float host_coeffs[256] = {...};
+hipMemcpyToSymbol(coefficients, host_coeffs, sizeof(float) * 256);
+
+// Kernel uses constant memory
+__global__ void kernel(float* data) {
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    // All threads read same coefficient - fast broadcast
+    data[tid] *= coefficients[5];
+}
+```
+
+**Performance:**
+- **Best case (broadcast):** All threads read same address
+  - Single memory fetch serves 64 threads
+  - Extremely fast (cached, broadcast in one cycle)
+- **Worst case (divergent reads):** Each thread reads different address
+  - Serialized reads (64 separate cache lookups)
+  - Slower than global memory (serialization overhead)
+
+**When to use:**
+- Kernel parameters (grid size, thresholds)
+- Mathematical constants (π, e, conversion factors)
+- Small lookup tables accessed uniformly
+- Configuration data read by all threads
+
+**When NOT to use:**
+- Thread-specific data (use global or registers)
+- Large tables (exceeds 64 KB limit)
+- Divergent access patterns (use texture or global memory instead)
+
+**Example - polynomial evaluation:**
+```cpp
+__constant__ float poly_coeffs[10];  // Polynomial coefficients
+
+__global__ void evalPolynomial(float* x, float* y, int n) {
+    int tid = blockIdx.x * blockDim.x + threadIdx.x;
+    if (tid < n) {
+        float val = x[tid];
+        float result = poly_coeffs[0];  // All threads read same coeff
+        float power = val;
+        for (int i = 1; i < 10; i++) {
+            result += poly_coeffs[i] * power;  // Broadcast read
+            power *= val;
+        }
+        y[tid] = result;
+    }
+}
+```
+
+**Related:** [Memory Hierarchy](#memory-hierarchy), [Kernel](#kernel), [Wavefront](#wavefront), [L1 Cache](#l1-l2-cache)
